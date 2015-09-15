@@ -5,9 +5,9 @@ import com.nudanam.java.rest.client.lib.JsonLib;
 public class UserProfilePhotos {
 	
 	private int total_count;
-	private PhotoSize[] photos;
+	private PhotoSize[][] photos;
 	
-	public UserProfilePhotos(int total_count, PhotoSize[] photos) {
+	public UserProfilePhotos(int total_count, PhotoSize[][] photos) {
 		this.total_count = total_count;
 		this.photos = photos;
 	}
@@ -16,7 +16,7 @@ public class UserProfilePhotos {
 		return total_count;
 	}
 
-	public PhotoSize[] getPhotos() {
+	public PhotoSize[][] getPhotos() {
 		return photos;
 	}
 

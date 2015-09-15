@@ -1,5 +1,6 @@
 package com.nudanam.java.telegram.bot.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -9,6 +10,7 @@ import com.nudanam.java.telegram.bot.types.Message;
 import com.nudanam.java.telegram.bot.types.ReplyMarkup;
 import com.nudanam.java.telegram.bot.types.Update;
 import com.nudanam.java.telegram.bot.types.User;
+import com.nudanam.java.telegram.bot.types.UserProfilePhotos;
 
 public class BotService {
 	
@@ -80,6 +82,165 @@ public class BotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
+	public Message sendPhoto(long chat_id, File photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		//TODO Upload file and handle it.
+		return null;
+	}
+	
+	public Message sendPhoto(long chat_id, String photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		String methodName = "sendPhoto";
+		ArrayList<Parameter> params=new ArrayList<Parameter>();
+		params.add(new Parameter("chat_id", "" + chat_id));
+		params.add(new Parameter("photo", "" + photo));
+		if((null != caption) && (!caption.isEmpty())) {
+			params.add(new Parameter("caption", "" + caption));
+		}
+		if(reply_to_message_id > 0) {
+			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+		}
+		if(null != reply_markup) {
+			params.add(new Parameter("reply_markup", "" + JsonLib.toJson(reply_markup)));
+		}
+		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+		if(!botServiceResponse.isOk()) {
+			return null;
+		}
+		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+	}
+	
+	public Message sendAudio(long chat_id, File audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		//TODO Upload file and handle it.
+		return null;
+	}
+	
+	public Message sendAudio(long chat_id, String audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		String methodName = "sendAudio";
+		ArrayList<Parameter> params=new ArrayList<Parameter>();
+		params.add(new Parameter("chat_id", "" + chat_id));
+		params.add(new Parameter("audio", "" + audio));
+		if(duration > 0) {
+			params.add(new Parameter("duration", "" + duration));
+		}
+		if((null != performer) && (!performer.isEmpty())) {
+			params.add(new Parameter("performer", "" + performer));
+		}
+		if((null != title) && (!title.isEmpty())) {
+			params.add(new Parameter("title", "" + title));
+		}
+		if(reply_to_message_id > 0) {
+			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+		}
+		if(null != reply_markup) {
+			params.add(new Parameter("reply_markup", "" + JsonLib.toJson(reply_markup)));
+		}
+		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+		if(!botServiceResponse.isOk()) {
+			return null;
+		}
+		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+	}
+	
+	public Message sendDocument(long chat_id, File document, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		//TODO Upload file and handle it.
+		return null;
+	}
+	
+	public Message sendDocument(long chat_id, String document, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		String methodName = "sendDocument";
+		ArrayList<Parameter> params=new ArrayList<Parameter>();
+		params.add(new Parameter("chat_id", "" + chat_id));
+		params.add(new Parameter("document", "" + document));
+		if(reply_to_message_id > 0) {
+			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+		}
+		if(null != reply_markup) {
+			params.add(new Parameter("reply_markup", "" + JsonLib.toJson(reply_markup)));
+		}
+		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+		if(!botServiceResponse.isOk()) {
+			return null;
+		}
+		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+	}
+	
+	public Message sendSticker(long chat_id, File sticker, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		//TODO Upload file and handle it.
+		return null;
+	}
+	
+	public Message sendSticker(long chat_id, String sticker, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		String methodName = "sendSticker";
+		ArrayList<Parameter> params=new ArrayList<Parameter>();
+		params.add(new Parameter("chat_id", "" + chat_id));
+		params.add(new Parameter("sticker", "" + sticker));
+		if(reply_to_message_id > 0) {
+			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+		}
+		if(null != reply_markup) {
+			params.add(new Parameter("reply_markup", "" + JsonLib.toJson(reply_markup)));
+		}
+		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+		if(!botServiceResponse.isOk()) {
+			return null;
+		}
+		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+	}
+	
+	public Message sendVideo(long chat_id, File video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		//TODO Upload file and handle it.
+		return null;
+	}
+	
+	public Message sendVideo(long chat_id, String video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		String methodName = "sendAudio";
+		ArrayList<Parameter> params=new ArrayList<Parameter>();
+		params.add(new Parameter("chat_id", "" + chat_id));
+		params.add(new Parameter("video", "" + video));
+		if(duration > 0) {
+			params.add(new Parameter("duration", "" + duration));
+		}
+		if((null != caption) && (!caption.isEmpty())) {
+			params.add(new Parameter("performer", "" + caption));
+		}
+		if(reply_to_message_id > 0) {
+			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+		}
+		if(null != reply_markup) {
+			params.add(new Parameter("reply_markup", "" + JsonLib.toJson(reply_markup)));
+		}
+		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+		if(!botServiceResponse.isOk()) {
+			return null;
+		}
+		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+	}
+	
+	public Message sendVoice(long chat_id, File voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		//TODO Upload file and handle it.
+		return null;
+	}
+	
+	public Message sendVoice(long chat_id, String voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		String methodName = "sendAudio";
+		ArrayList<Parameter> params=new ArrayList<Parameter>();
+		params.add(new Parameter("chat_id", "" + chat_id));
+		params.add(new Parameter("voice", "" + voice));
+		if(duration > 0) {
+			params.add(new Parameter("duration", "" + duration));
+		}
+		if(reply_to_message_id > 0) {
+			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+		}
+		if(null != reply_markup) {
+			params.add(new Parameter("reply_markup", "" + JsonLib.toJson(reply_markup)));
+		}
+		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+		if(!botServiceResponse.isOk()) {
+			return null;
+		}
+		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+	}
+	
 	public Message sendLocation(long chat_id, float latitude, float longitude, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		String methodName = "sendLocation";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
@@ -117,6 +278,31 @@ public class BotService {
 			return false;
 		}
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), boolean.class);
+	}
+	
+	public UserProfilePhotos getUserProfilePhotos(long user_id, int offset, int limit) throws IOException {
+		String methodName = "getUserProfilePhotos";
+		ArrayList<Parameter> params=new ArrayList<Parameter>();
+		params.add(new Parameter("user_id", "" + user_id));
+		if(offset > 0) {
+			params.add(new Parameter("offset", "" + offset));
+		}
+		if(limit <= 100) {
+			params.add(new Parameter("limit", "" + limit));
+		}
+		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+		if(!botServiceResponse.isOk()) {
+			return null;
+		}
+		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), UserProfilePhotos.class);
+	}
+	
+	public UserProfilePhotos getUserProfilePhotos(long user_id, int offset) throws IOException {
+		return getUserProfilePhotos(user_id, offset, 101);
+	}
+	
+	public UserProfilePhotos getUserProfilePhotos(long user_id) throws IOException {
+		return getUserProfilePhotos(user_id, 0);
 	}
 	
 	public synchronized Update[] getUpdates(long offset, int limit, int timeout) throws IOException {
