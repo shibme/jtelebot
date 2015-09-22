@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.nudanam.java.rest.client.lib.JsonLib;
 import com.nudanam.java.rest.client.lib.Parameter;
 import com.nudanam.java.telegram.bot.types.Message;
+import com.nudanam.java.telegram.bot.types.ParseMode;
 import com.nudanam.java.telegram.bot.types.ReplyMarkup;
 import com.nudanam.java.telegram.bot.types.TelegramFile;
 import com.nudanam.java.telegram.bot.types.Update;
@@ -40,11 +41,14 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), User.class);
 	}
 	
-	public Message sendMessage(long chat_id, String text, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+	public Message sendMessage(long chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		String methodName = "sendMessage";
 		ArrayList<Parameter> params = new ArrayList<Parameter>();
 		params.add(new Parameter("chat_id", "" + chat_id));
 		params.add(new Parameter("text", text));
+		if(parse_mode != ParseMode.None) {
+			params.add(new Parameter("parse_mode", parse_mode.toString()));
+		}
 		if(disable_web_page_preview) {
 			params.add(new Parameter("disable_web_page_preview", "" + disable_web_page_preview));
 		}
@@ -61,16 +65,20 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	public Message sendMessage(long chat_id, String text, boolean disable_web_page_preview, long reply_to_message_id) throws IOException {
-		return sendMessage(chat_id, text, disable_web_page_preview, reply_to_message_id, null);
+	public Message sendMessage(long chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id) throws IOException {
+		return sendMessage(chat_id, text, parse_mode, disable_web_page_preview, reply_to_message_id, null);
 	}
 	
-	public Message sendMessage(long chat_id, String text, boolean disable_web_page_preview) throws IOException {
-		return sendMessage(chat_id, text, disable_web_page_preview, 0);
+	public Message sendMessage(long chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview) throws IOException {
+		return sendMessage(chat_id, text, parse_mode, disable_web_page_preview, 0);
+	}
+	
+	public Message sendMessage(long chat_id, String text, ParseMode parse_mode) throws IOException {
+		return sendMessage(chat_id, text, parse_mode, false);
 	}
 	
 	public Message sendMessage(long chat_id, String text) throws IOException {
-		return sendMessage(chat_id, text, false);
+		return sendMessage(chat_id, text, null);
 	}
 	
 	public Message forwardMessage(long chat_id, long from_chat_id, long message_id) throws IOException {
