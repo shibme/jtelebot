@@ -12,14 +12,6 @@ public class Video {
 	private String mime_type;
 	private int file_size;
 	private String caption;
-	
-	public Video(String file_id, int width, int height, int duration, PhotoSize thumb) {
-		this.file_id = file_id;
-		this.width = width;
-		this.height = height;
-		this.duration = duration;
-		this.thumb = thumb;
-	}
 
 	public String getFile_id() {
 		return file_id;

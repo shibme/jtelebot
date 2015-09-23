@@ -9,7 +9,7 @@ public class User {
 	private String last_name;
 	private String username;
 	
-	public User(long id, String first_name) {
+	protected User(long id, String first_name) {
 		this.id = id;
 		this.first_name = first_name;
 	}

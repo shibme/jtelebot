@@ -10,6 +10,10 @@ public class ForceReply implements ReplyMarkup {
 	public ForceReply(boolean selective) {
 		this.selective = selective;
 	}
+	
+	public ForceReply() {
+		this.selective = false;
+	}
 
 	public Boolean getForce_reply() {
 		return force_reply;

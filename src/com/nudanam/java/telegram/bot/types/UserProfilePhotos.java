@@ -6,11 +6,6 @@ public class UserProfilePhotos {
 	
 	private int total_count;
 	private PhotoSize[][] photos;
-	
-	public UserProfilePhotos(int total_count, PhotoSize[][] photos) {
-		this.total_count = total_count;
-		this.photos = photos;
-	}
 
 	public int getTotal_count() {
 		return total_count;

@@ -9,11 +9,6 @@ public class Document {
 	private long duration;
 	private String mime_type;
 	private long file_size;
-	
-	public Document(String file_id, PhotoSize thumb) {
-		this.file_id = file_id;
-		this.thumb = thumb;
-	}
 
 	public String getFile_id() {
 		return file_id;

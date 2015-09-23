@@ -8,12 +8,6 @@ public class PhotoSize {
 	private int width;
 	private int height;
 	private long file_size;
-	
-	public PhotoSize(String file_id, int width, int height) {
-		this.file_id = file_id;
-		this.width = width;
-		this.height = height;
-	}
 
 	public String getFile_id() {
 		return file_id;

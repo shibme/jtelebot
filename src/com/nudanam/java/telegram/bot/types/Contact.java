@@ -8,11 +8,6 @@ public class Contact {
 	private String first_name;
 	private String last_name;
 	private String user_id;
-	
-	public Contact(String phone_number, String first_name) {
-		this.phone_number = phone_number;
-		this.first_name = first_name;
-	}
 
 	public String getPhone_number() {
 		return phone_number;

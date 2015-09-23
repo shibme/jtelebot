@@ -9,13 +9,6 @@ public class Sticker {
 	private int height;
 	private PhotoSize thumb;
 	private long file_size;
-	
-	public Sticker(String file_id, int width, int height, PhotoSize thumb) {
-		this.file_id = file_id;
-		this.width = width;
-		this.height = height;
-		this.thumb = thumb;
-	}
 
 	public String getFile_id() {
 		return file_id;

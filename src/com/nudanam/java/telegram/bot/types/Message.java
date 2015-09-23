@@ -25,13 +25,6 @@ public class Message {
 	private PhotoSize[] new_chat_photo;
 	private Boolean delete_chat_photo;
 	private Boolean group_chat_created;
-	
-	public Message(int message_id, User from, long date, Chat chat) {
-		this.message_id = message_id;
-		this.from = from;
-		this.date = date;
-		this.chat = chat;
-	}
 
 	public int getMessage_id() {
 		return message_id;

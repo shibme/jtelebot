@@ -8,11 +8,6 @@ public class Audio {
 	private int duration;
 	private String mime_type;
 	private long file_size;
-	
-	public Audio(String file_id, int duration) {
-		this.file_id = file_id;
-		this.duration = duration;
-	}
 
 	public String getFile_id() {
 		return file_id;

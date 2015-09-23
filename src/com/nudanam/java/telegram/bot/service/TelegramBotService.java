@@ -78,7 +78,7 @@ public class TelegramBotService {
 	}
 	
 	public Message sendMessage(long chat_id, String text) throws IOException {
-		return sendMessage(chat_id, text, null);
+		return sendMessage(chat_id, text, ParseMode.None);
 	}
 	
 	public Message forwardMessage(long chat_id, long from_chat_id, long message_id) throws IOException {
@@ -124,8 +124,32 @@ public class TelegramBotService {
 		return sendPhoto(chat_id, photo, null, caption, reply_to_message_id, reply_markup);
 	}
 	
+	public Message sendPhoto(long chat_id, String photo, String caption, long reply_to_message_id) throws IOException {
+		return sendPhoto(chat_id, photo, caption, reply_to_message_id, null);
+	}
+	
+	public Message sendPhoto(long chat_id, String photo, String caption) throws IOException {
+		return sendPhoto(chat_id, photo, caption, 0);
+	}
+	
+	public Message sendPhoto(long chat_id, String photo) throws IOException {
+		return sendPhoto(chat_id, photo, null);
+	}
+	
 	public Message sendPhoto(long chat_id, File photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		return sendPhoto(chat_id, null, photo, caption, reply_to_message_id, reply_markup);
+	}
+	
+	public Message sendPhoto(long chat_id, File photo, String caption, long reply_to_message_id) throws IOException {
+		return sendPhoto(chat_id, photo, caption, reply_to_message_id, null);
+	}
+	
+	public Message sendPhoto(long chat_id, File photo, String caption) throws IOException {
+		return sendPhoto(chat_id, photo, caption, 0);
+	}
+	
+	public Message sendPhoto(long chat_id, File photo) throws IOException {
+		return sendPhoto(chat_id, photo, null);
 	}
 	
 	private Message sendAudio(long chat_id, String audioId, File audioFile, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
@@ -164,8 +188,48 @@ public class TelegramBotService {
 		return sendAudio(chat_id, audio, null, duration, performer, title, reply_to_message_id, reply_markup);
 	}
 	
+	public Message sendAudio(long chat_id, String audio, int duration, String performer, String title, long reply_to_message_id) throws IOException {
+		return sendAudio(chat_id, audio, duration, performer, title, reply_to_message_id, null);
+	}
+	
+	public Message sendAudio(long chat_id, String audio, int duration, String performer, String title) throws IOException {
+		return sendAudio(chat_id, audio, duration, performer, title, 0);
+	}
+	
+	public Message sendAudio(long chat_id, String audio, int duration, String performer) throws IOException {
+		return sendAudio(chat_id, audio, duration, performer, null);
+	}
+	
+	public Message sendAudio(long chat_id, String audio, int duration) throws IOException {
+		return sendAudio(chat_id, audio, duration, null);
+	}
+	
+	public Message sendAudio(long chat_id, String audio) throws IOException {
+		return sendAudio(chat_id, audio, 0);
+	}
+	
 	public Message sendAudio(long chat_id, File audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		return sendAudio(chat_id, null, audio, duration, performer, title, reply_to_message_id, reply_markup);
+	}
+	
+	public Message sendAudio(long chat_id, File audio, int duration, String performer, String title, long reply_to_message_id) throws IOException {
+		return sendAudio(chat_id, audio, duration, performer, title, reply_to_message_id, null);
+	}
+	
+	public Message sendAudio(long chat_id, File audio, int duration, String performer, String title) throws IOException {
+		return sendAudio(chat_id, audio, duration, performer, title, 0);
+	}
+	
+	public Message sendAudio(long chat_id, File audio, int duration, String performer) throws IOException {
+		return sendAudio(chat_id, audio, duration, performer, null);
+	}
+	
+	public Message sendAudio(long chat_id, File audio, int duration) throws IOException {
+		return sendAudio(chat_id, audio, duration, null);
+	}
+	
+	public Message sendAudio(long chat_id, File audio) throws IOException {
+		return sendAudio(chat_id, audio, 0);
 	}
 	
 	private Message sendDocument(long chat_id, String documentId, File documentFile, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
@@ -195,8 +259,24 @@ public class TelegramBotService {
 		return sendDocument(chat_id, document, null, reply_to_message_id, reply_markup);
 	}
 	
+	public Message sendDocument(long chat_id, String document, long reply_to_message_id) throws IOException {
+		return sendDocument(chat_id, document, reply_to_message_id, null);
+	}
+	
+	public Message sendDocument(long chat_id, String document) throws IOException {
+		return sendDocument(chat_id, document, 0);
+	}
+	
 	public Message sendDocument(long chat_id, File document, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		return sendDocument(chat_id, null, document, reply_to_message_id, reply_markup);
+	}
+	
+	public Message sendDocument(long chat_id, File document, long reply_to_message_id) throws IOException {
+		return sendDocument(chat_id, document, reply_to_message_id, null);
+	}
+	
+	public Message sendDocument(long chat_id, File document) throws IOException {
+		return sendDocument(chat_id, document, 0);
 	}
 	
 	private Message sendSticker(long chat_id, String stickerId, File stickerFile, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
@@ -226,8 +306,24 @@ public class TelegramBotService {
 		return sendSticker(chat_id, sticker, null, reply_to_message_id, reply_markup);
 	}
 	
+	public Message sendSticker(long chat_id, String sticker, long reply_to_message_id) throws IOException {
+		return sendSticker(chat_id, sticker, reply_to_message_id, null);
+	}
+	
+	public Message sendSticker(long chat_id, String sticker) throws IOException {
+		return sendSticker(chat_id, sticker, 0);
+	}
+	
 	public Message sendSticker(long chat_id, File sticker, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		return sendSticker(chat_id, null, sticker, reply_to_message_id, reply_markup);
+	}
+	
+	public Message sendSticker(long chat_id, File sticker, long reply_to_message_id) throws IOException {
+		return sendSticker(chat_id, sticker, reply_to_message_id, null);
+	}
+	
+	public Message sendSticker(long chat_id, File sticker) throws IOException {
+		return sendSticker(chat_id, sticker, 0);
 	}
 	
 	private Message sendVideo(long chat_id, String videoId, File videoFile, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
@@ -263,8 +359,40 @@ public class TelegramBotService {
 		return sendVideo(chat_id, video, null, duration, caption, reply_to_message_id, reply_markup);
 	}
 	
+	public Message sendVideo(long chat_id, String video, int duration, String caption, long reply_to_message_id) throws IOException {
+		return sendVideo(chat_id, video, duration, caption, reply_to_message_id, null);
+	}
+	
+	public Message sendVideo(long chat_id, String video, int duration, String caption) throws IOException {
+		return sendVideo(chat_id, video, duration, caption, 0);
+	}
+	
+	public Message sendVideo(long chat_id, String video, int duration) throws IOException {
+		return sendVideo(chat_id, video, duration, null);
+	}
+	
+	public Message sendVideo(long chat_id, String video) throws IOException {
+		return sendVideo(chat_id, video, 0);
+	}
+	
 	public Message sendVideo(long chat_id, File video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		return sendVideo(chat_id, null, video, duration, caption, reply_to_message_id, reply_markup);
+	}
+	
+	public Message sendVideo(long chat_id, File video, int duration, String caption, long reply_to_message_id) throws IOException {
+		return sendVideo(chat_id, video, duration, caption, reply_to_message_id, null);
+	}
+	
+	public Message sendVideo(long chat_id, File video, int duration, String caption) throws IOException {
+		return sendVideo(chat_id, video, duration, caption, 0);
+	}
+	
+	public Message sendVideo(long chat_id, File video, int duration) throws IOException {
+		return sendVideo(chat_id, video, duration, null);
+	}
+	
+	public Message sendVideo(long chat_id, File video) throws IOException {
+		return sendVideo(chat_id, video, 0);
 	}
 	
 	private Message sendVoice(long chat_id, String voiceId, File voiceFile, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
@@ -297,8 +425,32 @@ public class TelegramBotService {
 		return sendVoice(chat_id, voice, null, duration, reply_to_message_id, reply_markup);
 	}
 	
+	public Message sendVoice(long chat_id, String voice, int duration, long reply_to_message_id) throws IOException {
+		return sendVoice(chat_id, voice, duration, reply_to_message_id, null);
+	}
+	
+	public Message sendVoice(long chat_id, String voice, int duration) throws IOException {
+		return sendVoice(chat_id, voice, duration, 0);
+	}
+	
+	public Message sendVoice(long chat_id, String voice) throws IOException {
+		return sendVoice(chat_id, voice, 0);
+	}
+	
 	public Message sendVoice(long chat_id, File voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		return sendVoice(chat_id, null, voice, duration, reply_to_message_id, reply_markup);
+	}
+	
+	public Message sendVoice(long chat_id, File voice, int duration, long reply_to_message_id) throws IOException {
+		return sendVoice(chat_id, voice, duration, reply_to_message_id, null);
+	}
+	
+	public Message sendVoice(long chat_id, File voice, int duration) throws IOException {
+		return sendVoice(chat_id, voice, duration, 0);
+	}
+	
+	public Message sendVoice(long chat_id, File voice) throws IOException {
+		return sendVoice(chat_id, voice, 0);
 	}
 	
 	public Message sendLocation(long chat_id, float latitude, float longitude, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
