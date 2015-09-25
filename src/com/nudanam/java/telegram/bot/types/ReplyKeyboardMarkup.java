@@ -10,11 +10,11 @@ public class ReplyKeyboardMarkup implements ReplyMarkup {
 	private boolean selective;
 	
 	public ReplyKeyboardMarkup(String[][] keyboard) {
-		initializer(keyboard, false, false, false);
+		initializer(keyboard, false, true, false);
 	}
 	
 	public ReplyKeyboardMarkup(String[][] keyboard, boolean resize_keyboard) {
-		initializer(keyboard, resize_keyboard, false, false);
+		initializer(keyboard, resize_keyboard, true, false);
 	}
 	
 	public ReplyKeyboardMarkup(String[][] keyboard, boolean resize_keyboard, boolean one_time_keyboard) {

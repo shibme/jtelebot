@@ -46,7 +46,7 @@ public class TelegramBotService {
 		ArrayList<Parameter> params = new ArrayList<Parameter>();
 		params.add(new Parameter("chat_id", "" + chat_id));
 		params.add(new Parameter("text", text));
-		if(parse_mode != ParseMode.None) {
+		if((parse_mode != null) && (parse_mode != ParseMode.None)) {
 			params.add(new Parameter("parse_mode", parse_mode.toString()));
 		}
 		if(disable_web_page_preview) {
