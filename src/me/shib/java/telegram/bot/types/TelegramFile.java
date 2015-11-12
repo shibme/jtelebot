@@ -1,8 +1,8 @@
-package com.nudanam.java.telegram.bot.types;
+package me.shib.java.telegram.bot.types;
 
 import java.io.File;
 
-import com.nudanam.java.rest.client.lib.JsonLib;
+import me.shib.java.rest.client.lib.JsonLib;
 
 public class TelegramFile {
 

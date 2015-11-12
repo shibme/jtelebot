@@ -1,4 +1,4 @@
-package com.nudanam.java.telegram.bot.service;
+package me.shib.java.telegram.bot.service;
 
 public class BotServiceWrapperResponse {
 	

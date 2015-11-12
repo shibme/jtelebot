@@ -1,11 +1,12 @@
-package com.nudanam.java.telegram.bot.types;
+package me.shib.java.telegram.bot.types;
 
-import com.nudanam.java.rest.client.lib.JsonLib;
+import me.shib.java.rest.client.lib.JsonLib;
 
-public class Audio {
+public class Document {
 	
 	private String file_id;
-	private int duration;
+	private PhotoSize thumb;
+	private long duration;
 	private String mime_type;
 	private long file_size;
 
@@ -13,7 +14,11 @@ public class Audio {
 		return file_id;
 	}
 
-	public int getDuration() {
+	public PhotoSize getThumb() {
+		return thumb;
+	}
+
+	public long getDuration() {
 		return duration;
 	}
 
@@ -25,7 +30,6 @@ public class Audio {
 		return file_size;
 	}
 
-	@Override
 	public String toString() {
 		return JsonLib.toJson(this);
 	}

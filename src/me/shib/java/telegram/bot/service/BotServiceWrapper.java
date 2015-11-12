@@ -1,12 +1,12 @@
-package com.nudanam.java.telegram.bot.service;
+package me.shib.java.telegram.bot.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.nudanam.java.rest.client.lib.JsonLib;
-import com.nudanam.java.rest.client.lib.Parameter;
-import com.nudanam.java.rest.client.lib.ServiceAdapter;
-import com.nudanam.java.rest.client.lib.ServiceResponse;
+import me.shib.java.rest.client.lib.JsonLib;
+import me.shib.java.rest.client.lib.Parameter;
+import me.shib.java.rest.client.lib.ServiceAdapter;
+import me.shib.java.rest.client.lib.ServiceResponse;
 
 public class BotServiceWrapper {
 	
