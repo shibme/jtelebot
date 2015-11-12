@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.nudanam.java.rest.client.lib.JsonLib;
 import com.nudanam.java.rest.client.lib.Parameter;
+import com.nudanam.java.telegram.bot.types.ChatId;
 import com.nudanam.java.telegram.bot.types.Message;
 import com.nudanam.java.telegram.bot.types.ParseMode;
 import com.nudanam.java.telegram.bot.types.ReplyMarkup;
@@ -34,17 +35,17 @@ public class TelegramBotService {
 	
 	public User getMe() throws IOException {
 		String methodName = "getMe";
-		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName);
+		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.get(methodName);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), User.class);
 	}
 	
-	public Message sendMessage(long chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+	public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		String methodName = "sendMessage";
 		ArrayList<Parameter> params = new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
 		params.add(new Parameter("text", text));
 		if((parse_mode != null) && (parse_mode != ParseMode.None)) {
 			params.add(new Parameter("parse_mode", parse_mode.toString()));
@@ -65,27 +66,27 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	public Message sendMessage(long chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id) throws IOException {
+	public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id) throws IOException {
 		return sendMessage(chat_id, text, parse_mode, disable_web_page_preview, reply_to_message_id, null);
 	}
 	
-	public Message sendMessage(long chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview) throws IOException {
+	public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview) throws IOException {
 		return sendMessage(chat_id, text, parse_mode, disable_web_page_preview, 0);
 	}
 	
-	public Message sendMessage(long chat_id, String text, ParseMode parse_mode) throws IOException {
+	public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode) throws IOException {
 		return sendMessage(chat_id, text, parse_mode, false);
 	}
 	
-	public Message sendMessage(long chat_id, String text) throws IOException {
+	public Message sendMessage(ChatId chat_id, String text) throws IOException {
 		return sendMessage(chat_id, text, ParseMode.None);
 	}
 	
-	public Message forwardMessage(long chat_id, long from_chat_id, long message_id) throws IOException {
+	public Message forwardMessage(ChatId chat_id, ChatId from_chat_id, long message_id) throws IOException {
 		String methodName = "forwardMessage";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
-		params.add(new Parameter("from_chat_id", "" + from_chat_id));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
+		params.add(new Parameter("from_chat_id", from_chat_id.getChatId()));
 		params.add(new Parameter("message_id", "" + message_id));
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
@@ -94,15 +95,15 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	private Message sendPhoto(long chat_id, String photoId, File photoFile, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+	public Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		String methodName = "sendPhoto";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
-		if(null != photoId) {
-			params.add(new Parameter("photo", photoId));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
+		if(null != photo.getFile_id()) {
+			params.add(new Parameter("photo", photo.getFile_id()));
 		}
 		else {
-			params.add(new Parameter("photo", photoFile));
+			params.add(new Parameter("photo", photo.getFile()));
 		}
 		if((null != caption) && (!caption.isEmpty())) {
 			params.add(new Parameter("caption", caption));
@@ -120,47 +121,27 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	public Message sendPhoto(long chat_id, String photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendPhoto(chat_id, photo, null, caption, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendPhoto(long chat_id, String photo, String caption, long reply_to_message_id) throws IOException {
+	public Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption, long reply_to_message_id) throws IOException {
 		return sendPhoto(chat_id, photo, caption, reply_to_message_id, null);
 	}
 	
-	public Message sendPhoto(long chat_id, String photo, String caption) throws IOException {
+	public Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption) throws IOException {
 		return sendPhoto(chat_id, photo, caption, 0);
 	}
 	
-	public Message sendPhoto(long chat_id, String photo) throws IOException {
+	public Message sendPhoto(ChatId chat_id, TelegramFile photo) throws IOException {
 		return sendPhoto(chat_id, photo, null);
 	}
 	
-	public Message sendPhoto(long chat_id, File photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendPhoto(chat_id, null, photo, caption, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendPhoto(long chat_id, File photo, String caption, long reply_to_message_id) throws IOException {
-		return sendPhoto(chat_id, photo, caption, reply_to_message_id, null);
-	}
-	
-	public Message sendPhoto(long chat_id, File photo, String caption) throws IOException {
-		return sendPhoto(chat_id, photo, caption, 0);
-	}
-	
-	public Message sendPhoto(long chat_id, File photo) throws IOException {
-		return sendPhoto(chat_id, photo, null);
-	}
-	
-	private Message sendAudio(long chat_id, String audioId, File audioFile, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+	public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		String methodName = "sendAudio";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
-		if(null != audioId) {
-			params.add(new Parameter("audio", audioId));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
+		if(null != audio.getFile_id()) {
+			params.add(new Parameter("audio", audio.getFile_id()));
 		}
 		else {
-			params.add(new Parameter("audio", audioFile));
+			params.add(new Parameter("audio", audio.getFile()));
 		}
 		if(duration > 0) {
 			params.add(new Parameter("duration", "" + duration));
@@ -184,63 +165,35 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	public Message sendAudio(long chat_id, String audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendAudio(chat_id, audio, null, duration, performer, title, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendAudio(long chat_id, String audio, int duration, String performer, String title, long reply_to_message_id) throws IOException {
+	public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title, long reply_to_message_id) throws IOException {
 		return sendAudio(chat_id, audio, duration, performer, title, reply_to_message_id, null);
 	}
 	
-	public Message sendAudio(long chat_id, String audio, int duration, String performer, String title) throws IOException {
+	public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title) throws IOException {
 		return sendAudio(chat_id, audio, duration, performer, title, 0);
 	}
 	
-	public Message sendAudio(long chat_id, String audio, int duration, String performer) throws IOException {
+	public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer) throws IOException {
 		return sendAudio(chat_id, audio, duration, performer, null);
 	}
 	
-	public Message sendAudio(long chat_id, String audio, int duration) throws IOException {
+	public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration) throws IOException {
 		return sendAudio(chat_id, audio, duration, null);
 	}
 	
-	public Message sendAudio(long chat_id, String audio) throws IOException {
+	public Message sendAudio(ChatId chat_id, TelegramFile audio) throws IOException {
 		return sendAudio(chat_id, audio, 0);
 	}
 	
-	public Message sendAudio(long chat_id, File audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendAudio(chat_id, null, audio, duration, performer, title, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendAudio(long chat_id, File audio, int duration, String performer, String title, long reply_to_message_id) throws IOException {
-		return sendAudio(chat_id, audio, duration, performer, title, reply_to_message_id, null);
-	}
-	
-	public Message sendAudio(long chat_id, File audio, int duration, String performer, String title) throws IOException {
-		return sendAudio(chat_id, audio, duration, performer, title, 0);
-	}
-	
-	public Message sendAudio(long chat_id, File audio, int duration, String performer) throws IOException {
-		return sendAudio(chat_id, audio, duration, performer, null);
-	}
-	
-	public Message sendAudio(long chat_id, File audio, int duration) throws IOException {
-		return sendAudio(chat_id, audio, duration, null);
-	}
-	
-	public Message sendAudio(long chat_id, File audio) throws IOException {
-		return sendAudio(chat_id, audio, 0);
-	}
-	
-	private Message sendDocument(long chat_id, String documentId, File documentFile, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+	public Message sendDocument(ChatId chat_id, TelegramFile document, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		String methodName = "sendDocument";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
-		if(null != documentId) {
-			params.add(new Parameter("document", documentId));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
+		if(null != document.getFile_id()) {
+			params.add(new Parameter("document", document.getFile_id()));
 		}
 		else {
-			params.add(new Parameter("document", documentFile));
+			params.add(new Parameter("document", document.getFile()));
 		}
 		if(reply_to_message_id > 0) {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
@@ -255,39 +208,23 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	public Message sendDocument(long chat_id, String document, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendDocument(chat_id, document, null, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendDocument(long chat_id, String document, long reply_to_message_id) throws IOException {
+	public Message sendDocument(ChatId chat_id, TelegramFile document, long reply_to_message_id) throws IOException {
 		return sendDocument(chat_id, document, reply_to_message_id, null);
 	}
 	
-	public Message sendDocument(long chat_id, String document) throws IOException {
+	public Message sendDocument(ChatId chat_id, TelegramFile document) throws IOException {
 		return sendDocument(chat_id, document, 0);
 	}
 	
-	public Message sendDocument(long chat_id, File document, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendDocument(chat_id, null, document, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendDocument(long chat_id, File document, long reply_to_message_id) throws IOException {
-		return sendDocument(chat_id, document, reply_to_message_id, null);
-	}
-	
-	public Message sendDocument(long chat_id, File document) throws IOException {
-		return sendDocument(chat_id, document, 0);
-	}
-	
-	private Message sendSticker(long chat_id, String stickerId, File stickerFile, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+	public Message sendSticker(ChatId chat_id, TelegramFile sticker, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		String methodName = "sendSticker";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
-		if(null != stickerId) {
-			params.add(new Parameter("sticker", stickerId));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
+		if(null != sticker.getFile_id()) {
+			params.add(new Parameter("sticker", sticker.getFile_id()));
 		}
 		else {
-			params.add(new Parameter("sticker", stickerFile));
+			params.add(new Parameter("sticker", sticker.getFile()));
 		}
 		if(reply_to_message_id > 0) {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
@@ -302,39 +239,23 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	public Message sendSticker(long chat_id, String sticker, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendSticker(chat_id, sticker, null, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendSticker(long chat_id, String sticker, long reply_to_message_id) throws IOException {
+	public Message sendSticker(ChatId chat_id, TelegramFile sticker, long reply_to_message_id) throws IOException {
 		return sendSticker(chat_id, sticker, reply_to_message_id, null);
 	}
 	
-	public Message sendSticker(long chat_id, String sticker) throws IOException {
+	public Message sendSticker(ChatId chat_id, TelegramFile sticker) throws IOException {
 		return sendSticker(chat_id, sticker, 0);
 	}
 	
-	public Message sendSticker(long chat_id, File sticker, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendSticker(chat_id, null, sticker, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendSticker(long chat_id, File sticker, long reply_to_message_id) throws IOException {
-		return sendSticker(chat_id, sticker, reply_to_message_id, null);
-	}
-	
-	public Message sendSticker(long chat_id, File sticker) throws IOException {
-		return sendSticker(chat_id, sticker, 0);
-	}
-	
-	private Message sendVideo(long chat_id, String videoId, File videoFile, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		String methodName = "sendAudio";
+	public Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		String methodName = "sendVideo";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
-		if(null != videoId) {
-			params.add(new Parameter("video", videoId));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
+		if(null != video.getFile_id()) {
+			params.add(new Parameter("video", video.getFile_id()));
 		}
 		else {
-			params.add(new Parameter("video", videoFile));
+			params.add(new Parameter("video", video.getFile()));
 		}
 		if(duration > 0) {
 			params.add(new Parameter("duration", "" + duration));
@@ -355,55 +276,31 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	public Message sendVideo(long chat_id, String video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendVideo(chat_id, video, null, duration, caption, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendVideo(long chat_id, String video, int duration, String caption, long reply_to_message_id) throws IOException {
+	public Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption, long reply_to_message_id) throws IOException {
 		return sendVideo(chat_id, video, duration, caption, reply_to_message_id, null);
 	}
 	
-	public Message sendVideo(long chat_id, String video, int duration, String caption) throws IOException {
+	public Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption) throws IOException {
 		return sendVideo(chat_id, video, duration, caption, 0);
 	}
 	
-	public Message sendVideo(long chat_id, String video, int duration) throws IOException {
+	public Message sendVideo(ChatId chat_id, TelegramFile video, int duration) throws IOException {
 		return sendVideo(chat_id, video, duration, null);
 	}
 	
-	public Message sendVideo(long chat_id, String video) throws IOException {
+	public Message sendVideo(ChatId chat_id, TelegramFile video) throws IOException {
 		return sendVideo(chat_id, video, 0);
 	}
 	
-	public Message sendVideo(long chat_id, File video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendVideo(chat_id, null, video, duration, caption, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendVideo(long chat_id, File video, int duration, String caption, long reply_to_message_id) throws IOException {
-		return sendVideo(chat_id, video, duration, caption, reply_to_message_id, null);
-	}
-	
-	public Message sendVideo(long chat_id, File video, int duration, String caption) throws IOException {
-		return sendVideo(chat_id, video, duration, caption, 0);
-	}
-	
-	public Message sendVideo(long chat_id, File video, int duration) throws IOException {
-		return sendVideo(chat_id, video, duration, null);
-	}
-	
-	public Message sendVideo(long chat_id, File video) throws IOException {
-		return sendVideo(chat_id, video, 0);
-	}
-	
-	private Message sendVoice(long chat_id, String voiceId, File voiceFile, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		String methodName = "sendAudio";
+	public Message sendVoice(ChatId chat_id, TelegramFile voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+		String methodName = "sendVoice";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
-		if(null != voiceId) {
-			params.add(new Parameter("voice", voiceId));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
+		if(null != voice.getFile_id()) {
+			params.add(new Parameter("voice", voice.getFile_id()));
 		}
 		else {
-			params.add(new Parameter("voice", voiceFile));
+			params.add(new Parameter("voice", voice.getFile()));
 		}
 		if(duration > 0) {
 			params.add(new Parameter("duration", "" + duration));
@@ -421,42 +318,22 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	public Message sendVoice(long chat_id, String voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendVoice(chat_id, voice, null, duration, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendVoice(long chat_id, String voice, int duration, long reply_to_message_id) throws IOException {
+	public Message sendVoice(ChatId chat_id, TelegramFile voice, int duration, long reply_to_message_id) throws IOException {
 		return sendVoice(chat_id, voice, duration, reply_to_message_id, null);
 	}
 	
-	public Message sendVoice(long chat_id, String voice, int duration) throws IOException {
+	public Message sendVoice(ChatId chat_id, TelegramFile voice, int duration) throws IOException {
 		return sendVoice(chat_id, voice, duration, 0);
 	}
 	
-	public Message sendVoice(long chat_id, String voice) throws IOException {
+	public Message sendVoice(ChatId chat_id, TelegramFile voice) throws IOException {
 		return sendVoice(chat_id, voice, 0);
 	}
 	
-	public Message sendVoice(long chat_id, File voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
-		return sendVoice(chat_id, null, voice, duration, reply_to_message_id, reply_markup);
-	}
-	
-	public Message sendVoice(long chat_id, File voice, int duration, long reply_to_message_id) throws IOException {
-		return sendVoice(chat_id, voice, duration, reply_to_message_id, null);
-	}
-	
-	public Message sendVoice(long chat_id, File voice, int duration) throws IOException {
-		return sendVoice(chat_id, voice, duration, 0);
-	}
-	
-	public Message sendVoice(long chat_id, File voice) throws IOException {
-		return sendVoice(chat_id, voice, 0);
-	}
-	
-	public Message sendLocation(long chat_id, float latitude, float longitude, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+	public Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
 		String methodName = "sendLocation";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
 		params.add(new Parameter("latitude", "" + latitude));
 		params.add(new Parameter("longitude", "" + longitude));
 		if(reply_to_message_id > 0) {
@@ -472,18 +349,18 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
-	public Message sendLocation(long chat_id, float latitude, float longitude, long reply_to_message_id) throws IOException {
+	public Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id) throws IOException {
 		return sendLocation(chat_id, latitude, longitude, reply_to_message_id, null);
 	}
 	
-	public Message sendLocation(long chat_id, float latitude, float longitude) throws IOException {
+	public Message sendLocation(ChatId chat_id, float latitude, float longitude) throws IOException {
 		return sendLocation(chat_id, latitude, longitude, 0);
 	}
 	
-	public boolean sendChatAction(long chat_id, ChatAction action) throws IOException {
+	public boolean sendChatAction(ChatId chat_id, ChatAction action) throws IOException {
 		String methodName = "sendChatAction";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
-		params.add(new Parameter("chat_id", "" + chat_id));
+		params.add(new Parameter("chat_id", chat_id.getChatId()));
 		params.add(new Parameter("action", "" + action));
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
@@ -552,7 +429,7 @@ public class TelegramBotService {
 		return updates;
 	}
 	
-	public TelegramFile getFile(String file_id) throws IOException {
+	public TelegramFile getTFile(String file_id) throws IOException {
 		String methodName = "getFile";
 		ArrayList<Parameter> params=new ArrayList<Parameter>();
 		params.add(new Parameter("file_id", "" + file_id));
@@ -563,8 +440,12 @@ public class TelegramBotService {
 		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), TelegramFile.class);
 	}
 	
-	public File getDownloadedFile(String file_id, File downloadToFile, boolean showDownloadProgress) throws IOException {
-		TelegramFile tFile = getFile(file_id);
+	public File downloadTFile(String file_id, String downloadFilePath, boolean showDownloadProgress) throws IOException {
+		TelegramFile tFile = getTFile(file_id);
+		File downloadToFile = null;
+		if((downloadFilePath != null) && (!downloadFilePath.isEmpty())) {
+			downloadToFile = new File(downloadFilePath);
+		}
 		String downloadableURL = telegramBotServiceEndPoint + "/file/bot" + botApiToken + "/" + tFile.getFile_path();
 		HTTPFileDownloader hfd = null;
 		if(downloadToFile == null) {
@@ -594,16 +475,16 @@ public class TelegramBotService {
 		return hfd.getFile();
 	}
 	
-	public File getDownloadedFile(String file_id, File downloadToFile) throws IOException {
-		return getDownloadedFile(file_id, downloadToFile, false);
+	public File downloadTFile(String file_id, String downloadFilePath) throws IOException {
+		return downloadTFile(file_id, downloadFilePath, false);
 	}
 	
-	public File getDownloadedFile(String file_id, boolean showDownloadProgress) throws IOException {
-		return getDownloadedFile(file_id, null, showDownloadProgress);
+	public File downloadTFile(String file_id, boolean showDownloadProgress) throws IOException {
+		return downloadTFile(file_id, null, showDownloadProgress);
 	}
 	
-	public File getDownloadedFile(String file_id) throws IOException {
-		return getDownloadedFile(file_id, null, false);
+	public File downloadTFile(String file_id) throws IOException {
+		return downloadTFile(file_id, null, false);
 	}
 	
 }

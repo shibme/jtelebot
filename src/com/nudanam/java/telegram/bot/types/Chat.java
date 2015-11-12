@@ -5,10 +5,11 @@ import com.nudanam.java.rest.client.lib.JsonLib;
 public class Chat {
 	
 	public enum ChatType {
-		User, Group
+		Private, Group, Channel
 	}
 	
 	private long id;
+	private String type;
 	private String title;
 	private String first_name;
 	private String last_name;
@@ -16,13 +17,6 @@ public class Chat {
 
 	public long getId() {
 		return id;
-	}
-	
-	public ChatType getType() {
-		if((null == title) || (id > 0)) {
-			return ChatType.User;
-		}
-		return ChatType.Group;
 	}
 	
 	public User getUser() {
@@ -36,17 +30,22 @@ public class Chat {
 	}
 	
 	public GroupChat getGroup() {
-		if(getType() == ChatType.User) {
+		if(getType() == ChatType.Private) {
 			return null;
 		}
 		return new GroupChat(this.id, this.title);
 	}
 
 	public String toString() {
-		if(getType() == ChatType.User) {
+		if(getType() == ChatType.Private) {
 			return JsonLib.toJson(getUser());
 		}
 		return JsonLib.toJson(getGroup());
+	}
+
+	public ChatType getType() {
+		String expectedType = type.toLowerCase().substring(0, 1).toUpperCase() + type.toLowerCase().substring(1);
+		return ChatType.valueOf(expectedType);
 	}
 	
 }

@@ -29,4 +29,17 @@ public class BotServiceWrapper {
 		return post(apiName, null);
 	}
 	
+	public BotServiceWrapperResponse get(String apiName, ArrayList<Parameter> params) throws IOException {
+		ServiceResponse serviceResponse = serviceAdapter.get(apiName, params);
+		if(serviceResponse.getStatusCode() != 200) {
+			return null;
+		}
+		BotServiceWrapperResponse response = JsonLib.fromJson(serviceResponse.getResponse(), BotServiceWrapperResponse.class);
+		return response;
+	}
+	
+	public BotServiceWrapperResponse get(String apiName) throws IOException {
+		return get(apiName, null);
+	}
+	
 }
