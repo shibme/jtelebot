@@ -2,12 +2,10 @@ package me.shib.java.telegram.bot.types;
 
 import me.shib.java.rest.client.lib.JsonLib;
 
-public class Audio {
+public class Voice {
 	
 	private String file_id;
 	private int duration;
-	private String performer;
-	private String title;
 	private String mime_type;
 	private long file_size;
 
@@ -17,14 +15,6 @@ public class Audio {
 
 	public int getDuration() {
 		return duration;
-	}
-
-	public String getPerformer() {
-		return performer;
-	}
-
-	public String getTitle() {
-		return title;
 	}
 
 	public String getMime_type() {
@@ -39,5 +29,5 @@ public class Audio {
 	public String toString() {
 		return JsonLib.toJson(this);
 	}
-	
+
 }

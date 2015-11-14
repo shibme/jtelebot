@@ -17,6 +17,8 @@ public class Message {
 	private PhotoSize[] photo;
 	private Sticker sticker;
 	private Video video;
+	private Voice voice;
+	private String caption;
 	private Contact contact;
 	private Location location;
 	private User new_chat_participant;
@@ -76,6 +78,14 @@ public class Message {
 
 	public Video getVideo() {
 		return video;
+	}
+
+	public Voice getVoice() {
+		return voice;
+	}
+
+	public String getCaption() {
+		return caption;
 	}
 
 	public Contact getContact() {
