@@ -1,8 +1,8 @@
 # TelegramBotJavaLibrary #
-A Java Library to create telegram bots with Telegram Bot API.
+A Java API library based on Telegram Bot API to create telegram bots.
 
-### Downloads ###
-* [TelegramBotJavaLibrary JAR file](https://bitbucket.org/shiblymeeran/binarydownloads/downloads/TelegramBotJavaLibrary.jar)
+### Downloads [(Releases)](https://github.com/shiblymeeran/TelegramBotJavaLibrary/releases) ###
+TelegramBotJavaLibrary JAR file
 
 ### Dependencies ###
 * [RESTClientJavaLibrary](https://github.com/shiblymeeran/RESTClientJavaLibrary)
