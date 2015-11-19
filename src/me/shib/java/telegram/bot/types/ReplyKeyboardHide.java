@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class ReplyKeyboardHide implements ReplyMarkup {
 	
 	private final Boolean hide_keyboard = Boolean.TRUE;
@@ -14,9 +12,10 @@ public class ReplyKeyboardHide implements ReplyMarkup {
 	public boolean isSelective() {
 		return selective;
 	}
-	
+
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "ReplyKeyboardHide [hide_keyboard=" + hide_keyboard + ", selective=" + selective + "]";
 	}
 	
 }

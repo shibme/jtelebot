@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class ForceReply implements ReplyMarkup {
 	
 	private final Boolean force_reply = Boolean.TRUE;
@@ -22,9 +20,10 @@ public class ForceReply implements ReplyMarkup {
 	public boolean isSelective() {
 		return selective;
 	}
-	
+
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "ForceReply [force_reply=" + force_reply + ", selective=" + selective + "]";
 	}
 	
 }

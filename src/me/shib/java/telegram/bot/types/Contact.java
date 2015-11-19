@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class Contact {
 	
 	private String phone_number;
@@ -25,8 +23,10 @@ public class Contact {
 		return user_id;
 	}
 
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "Contact [phone_number=" + phone_number + ", first_name=" + first_name + ", last_name=" + last_name
+				+ ", user_id=" + user_id + "]";
 	}
 	
 }

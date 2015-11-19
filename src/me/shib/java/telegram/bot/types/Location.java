@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class Location {
 	
 	private float longitude;
@@ -15,8 +13,9 @@ public class Location {
 		return latitude;
 	}
 
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "Location [longitude=" + longitude + ", latitude=" + latitude + "]";
 	}
 	
 }

@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class PhotoSize {
 	
 	private String file_id;
@@ -25,8 +23,10 @@ public class PhotoSize {
 		return file_size;
 	}
 
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "PhotoSize [file_id=" + file_id + ", width=" + width + ", height=" + height + ", file_size=" + file_size
+				+ "]";
 	}
 	
 }

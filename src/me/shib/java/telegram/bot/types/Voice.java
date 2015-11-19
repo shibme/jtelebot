@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class Voice {
 	
 	private String file_id;
@@ -27,7 +25,8 @@ public class Voice {
 
 	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "Voice [file_id=" + file_id + ", duration=" + duration + ", mime_type=" + mime_type + ", file_size="
+				+ file_size + "]";
 	}
 
 }

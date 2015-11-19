@@ -22,6 +22,7 @@ public class TelegramBotService {
 	
 	private String botApiToken;
 	private long updateServiceOffset = 0;
+	private JsonLib jsonLib;
 	private BotServiceWrapper botServiceWrapper;
 	
 	public enum ChatAction {
@@ -30,7 +31,8 @@ public class TelegramBotService {
 	
 	public TelegramBotService(String botApiToken) {
 		this.botApiToken = botApiToken;
-		botServiceWrapper = new BotServiceWrapper(telegramBotServiceEndPoint + "/" + "bot" + botApiToken);
+		jsonLib = new JsonLib();
+		botServiceWrapper = new BotServiceWrapper(telegramBotServiceEndPoint + "/" + "bot" + botApiToken, jsonLib);
 	}
 	
 	public User getMe() throws IOException {
@@ -39,7 +41,7 @@ public class TelegramBotService {
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), User.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), User.class);
 	}
 	
 	public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
@@ -57,13 +59,13 @@ public class TelegramBotService {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
 		}
 		if(null != reply_markup) {
-			params.add(new Parameter("reply_markup", JsonLib.toJson(reply_markup)));
+			params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
 		}
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
 	public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id) throws IOException {
@@ -92,7 +94,7 @@ public class TelegramBotService {
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
 	public Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
@@ -112,13 +114,13 @@ public class TelegramBotService {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
 		}
 		if(null != reply_markup) {
-			params.add(new Parameter("reply_markup", JsonLib.toJson(reply_markup)));
+			params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
 		}
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
 	public Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption, long reply_to_message_id) throws IOException {
@@ -156,13 +158,13 @@ public class TelegramBotService {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
 		}
 		if(null != reply_markup) {
-			params.add(new Parameter("reply_markup", JsonLib.toJson(reply_markup)));
+			params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
 		}
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
 	public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title, long reply_to_message_id) throws IOException {
@@ -199,13 +201,13 @@ public class TelegramBotService {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
 		}
 		if(null != reply_markup) {
-			params.add(new Parameter("reply_markup", JsonLib.toJson(reply_markup)));
+			params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
 		}
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
 	public Message sendDocument(ChatId chat_id, TelegramFile document, long reply_to_message_id) throws IOException {
@@ -230,13 +232,13 @@ public class TelegramBotService {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
 		}
 		if(null != reply_markup) {
-			params.add(new Parameter("reply_markup", JsonLib.toJson(reply_markup)));
+			params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
 		}
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
 	public Message sendSticker(ChatId chat_id, TelegramFile sticker, long reply_to_message_id) throws IOException {
@@ -267,13 +269,13 @@ public class TelegramBotService {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
 		}
 		if(null != reply_markup) {
-			params.add(new Parameter("reply_markup", JsonLib.toJson(reply_markup)));
+			params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
 		}
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
 	public Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption, long reply_to_message_id) throws IOException {
@@ -309,13 +311,13 @@ public class TelegramBotService {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
 		}
 		if(null != reply_markup) {
-			params.add(new Parameter("reply_markup", JsonLib.toJson(reply_markup)));
+			params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
 		}
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
 	public Message sendVoice(ChatId chat_id, TelegramFile voice, int duration, long reply_to_message_id) throws IOException {
@@ -340,13 +342,13 @@ public class TelegramBotService {
 			params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
 		}
 		if(null != reply_markup) {
-			params.add(new Parameter("reply_markup", JsonLib.toJson(reply_markup)));
+			params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
 		}
 		BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Message.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
 	}
 	
 	public Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id) throws IOException {
@@ -366,7 +368,7 @@ public class TelegramBotService {
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return false;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), boolean.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), boolean.class);
 	}
 	
 	public UserProfilePhotos getUserProfilePhotos(long user_id, int offset, int limit) throws IOException {
@@ -383,7 +385,7 @@ public class TelegramBotService {
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), UserProfilePhotos.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), UserProfilePhotos.class);
 	}
 	
 	public UserProfilePhotos getUserProfilePhotos(long user_id, int offset) throws IOException {
@@ -410,7 +412,7 @@ public class TelegramBotService {
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return new Update[0];
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), Update[].class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Update[].class);
 	}
 	
 	public synchronized Update[] getUpdates(long offset, int limit) throws IOException {
@@ -437,7 +439,7 @@ public class TelegramBotService {
 		if((null == botServiceResponse) || (!botServiceResponse.isOk())) {
 			return null;
 		}
-		return JsonLib.fromJson(JsonLib.toJson(botServiceResponse.getResult()), TelegramFile.class);
+		return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), TelegramFile.class);
 	}
 	
 	public File downloadTFile(String file_id, String downloadFilePath, boolean showDownloadProgress) throws IOException {

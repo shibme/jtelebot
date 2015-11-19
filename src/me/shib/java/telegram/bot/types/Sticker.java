@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class Sticker {
 	
 	private String file_id;
@@ -29,9 +27,11 @@ public class Sticker {
 	public long getFile_size() {
 		return file_size;
 	}
-	
+
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "Sticker [file_id=" + file_id + ", width=" + width + ", height=" + height + ", thumb=" + thumb
+				+ ", file_size=" + file_size + "]";
 	}
 	
 }

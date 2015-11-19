@@ -1,6 +1,6 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
+import java.util.Arrays;
 
 public class ReplyKeyboardMarkup implements ReplyMarkup {
 	
@@ -47,9 +47,11 @@ public class ReplyKeyboardMarkup implements ReplyMarkup {
 	public boolean isSelective() {
 		return selective;
 	}
-	
+
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "ReplyKeyboardMarkup [keyboard=" + Arrays.toString(keyboard) + ", resize_keyboard=" + resize_keyboard
+				+ ", one_time_keyboard=" + one_time_keyboard + ", selective=" + selective + "]";
 	}
 	
 }

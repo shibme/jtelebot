@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class User {
 	
 	private long id;
@@ -37,9 +35,11 @@ public class User {
 	public String getUsername() {
 		return username;
 	}
-	
+
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "User [id=" + id + ", first_name=" + first_name + ", last_name=" + last_name + ", username=" + username
+				+ "]";
 	}
 	
 }

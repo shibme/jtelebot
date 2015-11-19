@@ -2,8 +2,6 @@ package me.shib.java.telegram.bot.types;
 
 import java.io.File;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class TelegramFile {
 
 	private String file_id;
@@ -39,8 +37,10 @@ public class TelegramFile {
 		this.file = file;
 	}
 
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "TelegramFile [file_id=" + file_id + ", file=" + file + ", file_size=" + file_size + ", file_path="
+				+ file_path + "]";
 	}
 	
 }

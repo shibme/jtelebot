@@ -1,6 +1,6 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
+import java.util.Arrays;
 
 public class UserProfilePhotos {
 	
@@ -15,8 +15,9 @@ public class UserProfilePhotos {
 		return photos;
 	}
 
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "UserProfilePhotos [total_count=" + total_count + ", photos=" + Arrays.toString(photos) + "]";
 	}
 	
 }

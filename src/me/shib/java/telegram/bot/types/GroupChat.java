@@ -1,8 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
-
 public class GroupChat {
 	
 	private long id;
@@ -20,9 +17,10 @@ public class GroupChat {
 	public String getTitle() {
 		return title;
 	}
-	
+
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "GroupChat [id=" + id + ", title=" + title + "]";
 	}
 	
 }

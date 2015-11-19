@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class Document {
 	
 	private String file_id;
@@ -30,8 +28,10 @@ public class Document {
 		return file_size;
 	}
 
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "Document [file_id=" + file_id + ", thumb=" + thumb + ", duration=" + duration + ", mime_type="
+				+ mime_type + ", file_size=" + file_size + "]";
 	}
 	
 }

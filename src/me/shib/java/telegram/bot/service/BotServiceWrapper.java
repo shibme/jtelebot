@@ -11,9 +11,11 @@ import me.shib.java.rest.client.lib.ServiceResponse;
 public class BotServiceWrapper {
 	
 	private ServiceAdapter serviceAdapter;
+	private JsonLib jsonLib;
 	
-	public BotServiceWrapper(String endPoint) {
+	public BotServiceWrapper(String endPoint, JsonLib jsonLib) {
 		serviceAdapter = new ServiceAdapter(endPoint);
+		this.jsonLib = jsonLib;
 	}
 	
 	public BotServiceWrapperResponse post(String apiName, ArrayList<Parameter> params) throws IOException {
@@ -21,7 +23,7 @@ public class BotServiceWrapper {
 		if(serviceResponse.getStatusCode() != 200) {
 			return null;
 		}
-		BotServiceWrapperResponse response = JsonLib.fromJson(serviceResponse.getResponse(), BotServiceWrapperResponse.class);
+		BotServiceWrapperResponse response = jsonLib.fromJson(serviceResponse.getResponse(), BotServiceWrapperResponse.class);
 		return response;
 	}
 	
@@ -34,7 +36,7 @@ public class BotServiceWrapper {
 		if(serviceResponse.getStatusCode() != 200) {
 			return null;
 		}
-		BotServiceWrapperResponse response = JsonLib.fromJson(serviceResponse.getResponse(), BotServiceWrapperResponse.class);
+		BotServiceWrapperResponse response = jsonLib.fromJson(serviceResponse.getResponse(), BotServiceWrapperResponse.class);
 		return response;
 	}
 	

@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class Video {
 	
 	private String file_id;
@@ -45,8 +43,11 @@ public class Video {
 		return caption;
 	}
 
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "Video [file_id=" + file_id + ", width=" + width + ", height=" + height + ", duration=" + duration
+				+ ", thumb=" + thumb + ", mime_type=" + mime_type + ", file_size=" + file_size + ", caption=" + caption
+				+ "]";
 	}
 	
 }

@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class ChatId {
 	
 	private String chat_id_channel;
@@ -23,8 +21,16 @@ public class ChatId {
 		return chat_id_channel;
 	}
 
+	public String sstoString() {
+		return "ChatId [chat_id_channel=" + chat_id_channel + "]";
+	}
+
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		if(chat_id_channel == null) {
+			return "ChatId [chat_id=" + chat_id + "]";
+		}
+		return "ChatId [chat_id=" + chat_id_channel + "]";
 	}
 	
 }

@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class Chat {
 	
 	public enum ChatType {
@@ -38,9 +36,9 @@ public class Chat {
 
 	public String toString() {
 		if(getType() == ChatType.Private) {
-			return JsonLib.toJson(getUser());
+			return getUser().toString();
 		}
-		return JsonLib.toJson(getGroup());
+		return getGroup().toString();
 	}
 
 	public ChatType getType() {

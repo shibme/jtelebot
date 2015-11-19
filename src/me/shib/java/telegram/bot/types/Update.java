@@ -1,7 +1,5 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
-
 public class Update {
 	
 	private long update_id;
@@ -14,9 +12,10 @@ public class Update {
 	public Message getMessage() {
 		return message;
 	}
-	
+
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "Update [update_id=" + update_id + ", message=" + message + "]";
 	}
 	
 }

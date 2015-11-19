@@ -1,6 +1,6 @@
 package me.shib.java.telegram.bot.types;
 
-import me.shib.java.rest.client.lib.JsonLib;
+import java.util.Arrays;
 
 public class Message {
 	
@@ -120,8 +120,16 @@ public class Message {
 		return group_chat_created;
 	}
 
+	@Override
 	public String toString() {
-		return JsonLib.toJson(this);
+		return "Message [message_id=" + message_id + ", from=" + from + ", date=" + date + ", chat=" + chat
+				+ ", forward_from=" + forward_from + ", forward_date=" + forward_date + ", reply_to_message="
+				+ reply_to_message + ", text=" + text + ", audio=" + audio + ", document=" + document + ", photo="
+				+ Arrays.toString(photo) + ", sticker=" + sticker + ", video=" + video + ", voice=" + voice
+				+ ", caption=" + caption + ", contact=" + contact + ", location=" + location + ", new_chat_participant="
+				+ new_chat_participant + ", left_chat_participant=" + left_chat_participant + ", new_chat_title="
+				+ new_chat_title + ", new_chat_photo=" + Arrays.toString(new_chat_photo) + ", delete_chat_photo="
+				+ delete_chat_photo + ", group_chat_created=" + group_chat_created + "]";
 	}
 	
 }
