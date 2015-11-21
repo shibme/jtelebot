@@ -1,19 +1,19 @@
-package me.shib.java.telegram.bot.service;
+package me.shib.java.lib.telegram.bot.service;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import me.shib.java.rest.client.lib.JsonLib;
-import me.shib.java.rest.client.lib.Parameter;
-import me.shib.java.telegram.bot.types.ChatId;
-import me.shib.java.telegram.bot.types.Message;
-import me.shib.java.telegram.bot.types.ParseMode;
-import me.shib.java.telegram.bot.types.ReplyMarkup;
-import me.shib.java.telegram.bot.types.TelegramFile;
-import me.shib.java.telegram.bot.types.Update;
-import me.shib.java.telegram.bot.types.User;
-import me.shib.java.telegram.bot.types.UserProfilePhotos;
+import me.shib.java.lib.rest.client.JsonLib;
+import me.shib.java.lib.rest.client.Parameter;
+import me.shib.java.lib.telegram.bot.types.ChatId;
+import me.shib.java.lib.telegram.bot.types.Message;
+import me.shib.java.lib.telegram.bot.types.ParseMode;
+import me.shib.java.lib.telegram.bot.types.ReplyMarkup;
+import me.shib.java.lib.telegram.bot.types.TelegramFile;
+import me.shib.java.lib.telegram.bot.types.Update;
+import me.shib.java.lib.telegram.bot.types.User;
+import me.shib.java.lib.telegram.bot.types.UserProfilePhotos;
 
 public class TelegramBotService {
 	

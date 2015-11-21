@@ -1,10 +1,11 @@
-package me.shib.java.telegram.bot.types;
+package me.shib.java.lib.telegram.bot.types;
 
-public class PhotoSize {
+public class Sticker {
 	
 	private String file_id;
 	private int width;
 	private int height;
+	private PhotoSize thumb;
 	private long file_size;
 
 	public String getFile_id() {
@@ -19,14 +20,18 @@ public class PhotoSize {
 		return height;
 	}
 
+	public PhotoSize getThumb() {
+		return thumb;
+	}
+
 	public long getFile_size() {
 		return file_size;
 	}
 
 	@Override
 	public String toString() {
-		return "PhotoSize [file_id=" + file_id + ", width=" + width + ", height=" + height + ", file_size=" + file_size
-				+ "]";
+		return "Sticker [file_id=" + file_id + ", width=" + width + ", height=" + height + ", thumb=" + thumb
+				+ ", file_size=" + file_size + "]";
 	}
 	
 }

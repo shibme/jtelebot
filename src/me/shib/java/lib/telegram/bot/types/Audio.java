@@ -1,4 +1,4 @@
-package me.shib.java.telegram.bot.types;
+package me.shib.java.lib.telegram.bot.types;
 
 public class Audio {
 	

@@ -1,4 +1,4 @@
-package me.shib.java.telegram.bot.service;
+package me.shib.java.lib.telegram.bot.service;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
