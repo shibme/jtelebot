@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/shiblymeeran/telegram-bot-java.svg)](https://travis-ci.org/shiblymeeran/telegram-bot-java)
 # telegram-bot-java #
 A Java API library based on Telegram Bot API to create telegram bots
 
