@@ -3,7 +3,7 @@ package me.shib.java.lib.telegram.bot.service;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import me.shib.java.lib.rest.client.JsonLib;
+import me.shib.java.lib.common.utils.JsonLib;
 import me.shib.java.lib.rest.client.Parameter;
 import me.shib.java.lib.rest.client.ServiceAdapter;
 import me.shib.java.lib.rest.client.ServiceResponse;

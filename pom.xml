@@ -5,9 +5,9 @@
 
 	<groupId>me.shib.java.lib</groupId>
 	<artifactId>telegram-bot-java</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<name>Telegram Bot Java Library</name>
-	<description>A Java API library based on Telegram Bot API to create telegram bots</description>
+	<description>A Java library for Telegram Bot API</description>
 	<url>https://github.com/shiblymeeran/telegram-bot-java</url>
 
 	<issueManagement>
@@ -146,7 +146,7 @@
 		<dependency>
 			<groupId>me.shib.java.lib</groupId>
 			<artifactId>rest-client-java</artifactId>
-			<version>0.3.3</version>
+			<version>0.3.4</version>
 		</dependency>
 	</dependencies>
 

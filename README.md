@@ -1,6 +1,8 @@
+# Telegram Bot Java Library
+A Java library for [Telegram Bot API](https://core.telegram.org/bots/api)
+
+### Build Status ###
 [![Build Status](https://travis-ci.org/shiblymeeran/telegram-bot-java.svg)](https://travis-ci.org/shiblymeeran/telegram-bot-java)
-# telegram-bot-java #
-A Java API library based on Telegram Bot API to create telegram bots
 
 ### Maven Dependency for Consumers ###
 Add to your pom.xml:
@@ -9,6 +11,6 @@ Add to your pom.xml:
 <dependency>
 	<groupId>me.shib.java.lib</groupId>
 	<artifactId>telegram-bot-java</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 </dependency>
 ```
