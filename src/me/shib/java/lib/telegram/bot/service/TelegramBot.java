@@ -15,10 +15,10 @@ import me.shib.java.lib.telegram.bot.types.Update;
 import me.shib.java.lib.telegram.bot.types.User;
 import me.shib.java.lib.telegram.bot.types.UserProfilePhotos;
 
-public class TelegramBotService {
+public class TelegramBot {
 	
 	private static final String telegramBotServiceEndPoint = "https://api.telegram.org";
-	private static final int longPollInterval = 3600;
+	private static final int longPollInterval = 300;
 	
 	private String botApiToken;
 	private long updateServiceOffset = 0;
@@ -29,7 +29,7 @@ public class TelegramBotService {
 		typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location;
 	}
 	
-	public TelegramBotService(String botApiToken) {
+	public TelegramBot(String botApiToken) {
 		this.botApiToken = botApiToken;
 		jsonLib = new JsonLib();
 		botServiceWrapper = new BotServiceWrapper(telegramBotServiceEndPoint + "/" + "bot" + botApiToken, jsonLib);
@@ -416,11 +416,11 @@ public class TelegramBotService {
 	}
 	
 	public synchronized Update[] getUpdates(long offset, int limit) throws IOException {
-		return getUpdates(offset, limit, 3600);
+		return getUpdates(offset, limit, longPollInterval);
 	}
 	
 	public synchronized Update[] getUpdates(long offset) throws IOException {
-		return getUpdates(offset, 100, 3600);
+		return getUpdates(offset, 100, longPollInterval);
 	}
 	
 	public synchronized Update[] getUpdates() throws IOException {
