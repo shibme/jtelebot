@@ -1,37 +1,37 @@
 package me.shib.java.lib.telegram.bot.types;
 
 public class Sticker {
-	
-	private String file_id;
-	private int width;
-	private int height;
-	private PhotoSize thumb;
-	private long file_size;
 
-	public String getFile_id() {
-		return file_id;
-	}
+    private String file_id;
+    private int width;
+    private int height;
+    private PhotoSize thumb;
+    private long file_size;
 
-	public int getWidth() {
-		return width;
-	}
+    public String getFile_id() {
+        return file_id;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public PhotoSize getThumb() {
-		return thumb;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public long getFile_size() {
-		return file_size;
-	}
+    public PhotoSize getThumb() {
+        return thumb;
+    }
 
-	@Override
-	public String toString() {
-		return "Sticker [file_id=" + file_id + ", width=" + width + ", height=" + height + ", thumb=" + thumb
-				+ ", file_size=" + file_size + "]";
-	}
-	
+    public long getFile_size() {
+        return file_size;
+    }
+
+    @Override
+    public String toString() {
+        return "Sticker [file_id=" + file_id + ", width=" + width + ", height=" + height + ", thumb=" + thumb
+                + ", file_size=" + file_size + "]";
+    }
+
 }

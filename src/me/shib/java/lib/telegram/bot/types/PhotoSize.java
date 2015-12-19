@@ -1,32 +1,32 @@
 package me.shib.java.lib.telegram.bot.types;
 
 public class PhotoSize {
-	
-	private String file_id;
-	private int width;
-	private int height;
-	private long file_size;
 
-	public String getFile_id() {
-		return file_id;
-	}
+    private String file_id;
+    private int width;
+    private int height;
+    private long file_size;
 
-	public int getWidth() {
-		return width;
-	}
+    public String getFile_id() {
+        return file_id;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public long getFile_size() {
-		return file_size;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	@Override
-	public String toString() {
-		return "PhotoSize [file_id=" + file_id + ", width=" + width + ", height=" + height + ", file_size=" + file_size
-				+ "]";
-	}
-	
+    public long getFile_size() {
+        return file_size;
+    }
+
+    @Override
+    public String toString() {
+        return "PhotoSize [file_id=" + file_id + ", width=" + width + ", height=" + height + ", file_size=" + file_size
+                + "]";
+    }
+
 }

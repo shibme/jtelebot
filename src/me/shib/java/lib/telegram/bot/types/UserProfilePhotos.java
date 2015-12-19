@@ -3,21 +3,21 @@ package me.shib.java.lib.telegram.bot.types;
 import java.util.Arrays;
 
 public class UserProfilePhotos {
-	
-	private int total_count;
-	private PhotoSize[][] photos;
 
-	public int getTotal_count() {
-		return total_count;
-	}
+    private int total_count;
+    private PhotoSize[][] photos;
 
-	public PhotoSize[][] getPhotos() {
-		return photos;
-	}
+    public int getTotal_count() {
+        return total_count;
+    }
 
-	@Override
-	public String toString() {
-		return "UserProfilePhotos [total_count=" + total_count + ", photos=" + Arrays.toString(photos) + "]";
-	}
-	
+    public PhotoSize[][] getPhotos() {
+        return photos;
+    }
+
+    @Override
+    public String toString() {
+        return "UserProfilePhotos [total_count=" + total_count + ", photos=" + Arrays.toString(photos) + "]";
+    }
+
 }
