@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Create an instance for this class with your Bot API token. Instances are singleton and for every new API token.
+ */
 public class TelegramBot {
 
     private static final String telegramBotServiceEndPoint = "https://api.telegram.org";
@@ -31,7 +34,8 @@ public class TelegramBot {
     /*
     A private constructor to prevent other classes from initializing
     */
-    private TelegramBot(){ }
+    private TelegramBot() {
+    }
 
     /**
      * @param botApiToken
@@ -562,11 +566,11 @@ public class TelegramBot {
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param voice Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param duration Duration of sent audio in seconds
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param voice               Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration            Duration of sent audio in seconds
      * @param reply_to_message_id If the message is a reply, ID of the original message
-     * @param reply_markup Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @return On success, the sent Message is returned.
      * @throws IOException
      */
@@ -598,9 +602,9 @@ public class TelegramBot {
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param voice Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param duration Duration of sent audio in seconds
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param voice               Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration            Duration of sent audio in seconds
      * @param reply_to_message_id If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException
@@ -612,8 +616,8 @@ public class TelegramBot {
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param voice Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param voice    Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
      * @param duration Duration of sent audio in seconds
      * @return On success, the sent Message is returned.
      * @throws IOException
@@ -626,7 +630,7 @@ public class TelegramBot {
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
      *
      * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param voice Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param voice   Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
      * @return On success, the sent Message is returned.
      * @throws IOException
      */
@@ -636,11 +640,12 @@ public class TelegramBot {
 
     /**
      * Use this method to send point on the map.
-     * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param latitude Latitude of location
-     * @param longitude Longitude of location
+     *
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude            Latitude of location
+     * @param longitude           Longitude of location
      * @param reply_to_message_id If the message is a reply, ID of the original message
-     * @param reply_markup Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @return On success, the sent Message is returned.
      * @throws IOException
      */
@@ -665,9 +670,10 @@ public class TelegramBot {
 
     /**
      * Use this method to send point on the map.
-     * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param latitude Latitude of location
-     * @param longitude Longitude of location
+     *
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude            Latitude of location
+     * @param longitude           Longitude of location
      * @param reply_to_message_id If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException
@@ -678,8 +684,9 @@ public class TelegramBot {
 
     /**
      * Use this method to send point on the map.
-     * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param latitude Latitude of location
+     *
+     * @param chat_id   Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude  Latitude of location
      * @param longitude Longitude of location
      * @return On success, the sent Message is returned.
      * @throws IOException
@@ -690,8 +697,9 @@ public class TelegramBot {
 
     /**
      * Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive.
+     *
      * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param action Type of action to broadcast. Choose one, depending on what the user is about to receive: typing for text messages, upload_photo for photos, record_video or upload_video for videos, record_audio or upload_audio for audio files, upload_document for general files, find_location for location data.
+     * @param action  Type of action to broadcast. Choose one, depending on what the user is about to receive: typing for text messages, upload_photo for photos, record_video or upload_video for videos, record_audio or upload_audio for audio files, upload_document for general files, find_location for location data.
      * @return On success, returns True.
      * @throws IOException
      */
@@ -709,9 +717,10 @@ public class TelegramBot {
 
     /**
      * Use this method to get a list of profile pictures for a user.
+     *
      * @param user_id Unique identifier of the target user
-     * @param offset Sequential number of the first photo to be returned. By default, all photos are returned.
-     * @param limit Limits the number of photos to be retrieved. Values between 1—100 are accepted. Defaults to 100.
+     * @param offset  Sequential number of the first photo to be returned. By default, all photos are returned.
+     * @param limit   Limits the number of photos to be retrieved. Values between 1—100 are accepted. Defaults to 100.
      * @return Returns a UserProfilePhotos object.
      * @throws IOException
      */
@@ -734,8 +743,9 @@ public class TelegramBot {
 
     /**
      * Use this method to get a list of profile pictures for a user.
+     *
      * @param user_id Unique identifier of the target user
-     * @param offset Sequential number of the first photo to be returned. By default, all photos are returned.
+     * @param offset  Sequential number of the first photo to be returned. By default, all photos are returned.
      * @return Returns a UserProfilePhotos object.
      * @throws IOException
      */
@@ -745,6 +755,7 @@ public class TelegramBot {
 
     /**
      * Use this method to get a list of profile pictures for a user.
+     *
      * @param user_id Unique identifier of the target user
      * @return Returns a UserProfilePhotos object.
      * @throws IOException
@@ -755,8 +766,9 @@ public class TelegramBot {
 
     /**
      * Use this method to receive incoming updates using long polling.
-     * @param offset Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
-     * @param limit Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100
+     *
+     * @param offset  Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
+     * @param limit   Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100
      * @param timeout Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling
      * @return An Array of Update objects is returned.
      * @throws IOException
@@ -782,8 +794,9 @@ public class TelegramBot {
 
     /**
      * Use this method to receive incoming updates using long polling.
+     *
      * @param offset Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
-     * @param limit Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100
+     * @param limit  Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100
      * @return An Array of Update objects is returned.
      * @throws IOException
      */
@@ -793,6 +806,7 @@ public class TelegramBot {
 
     /**
      * Use this method to receive incoming updates using long polling.
+     *
      * @param offset Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
      * @return An Array of Update objects is returned.
      * @throws IOException
@@ -803,6 +817,7 @@ public class TelegramBot {
 
     /**
      * Use this method to receive incoming updates using long polling.
+     *
      * @return An Array of Update objects is returned.
      * @throws IOException
      */
@@ -816,6 +831,7 @@ public class TelegramBot {
 
     /**
      * Use this method to get a TelegramFile object for downloading. For the moment, bots can download files of up to 20MB in size.
+     *
      * @param file_id File identifier to get TelegramFile object
      * @return On success, a TelegramFile object is returned.
      * @throws IOException
@@ -833,7 +849,8 @@ public class TelegramBot {
 
     /**
      * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
-     * @param file_id File identifier to for the file to be downloaded
+     *
+     * @param file_id          File identifier to for the file to be downloaded
      * @param downloadFilePath The local path where the file has to be downloaded
      * @return On success, a File object is returned.
      * @throws IOException
@@ -873,7 +890,8 @@ public class TelegramBot {
 
     /**
      * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
-     * @param file_id File identifier to for the file to be downloaded
+     *
+     * @param file_id          File identifier to for the file to be downloaded
      * @param downloadFilePath The local path where the file has to be downloaded
      * @return On success, a File object is returned.
      * @throws IOException
@@ -884,6 +902,7 @@ public class TelegramBot {
 
     /**
      * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
+     *
      * @param file_id File identifier to for the file to be downloaded
      * @return On success, a File object is returned.
      * @throws IOException
