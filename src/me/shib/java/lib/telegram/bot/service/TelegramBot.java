@@ -56,6 +56,15 @@ public class TelegramBot {
     }
 
     /**
+     * Gives the API token of the bot that is associated with the object.
+     *
+     * @return the API token of the TelegramBot object is returned.
+     */
+    public String getBotApiToken() {
+        return botApiToken;
+    }
+
+    /**
      * A simple method for testing your bot's auth token.
      *
      * @return basic information about the bot in form of a User object.
