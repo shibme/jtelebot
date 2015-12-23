@@ -1,6 +1,7 @@
 package me.shib.java.lib.telegram.bot.service;
 
 import me.shib.java.lib.common.utils.JsonLib;
+import me.shib.java.lib.rest.client.HTTPFileDownloader;
 import me.shib.java.lib.rest.client.Parameter;
 import me.shib.java.lib.telegram.bot.types.*;
 
@@ -867,7 +868,6 @@ public class TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public File downloadTFile(String file_id, String downloadFilePath) throws IOException {
-        boolean showDownloadProgress = false;
         TelegramFile tFile = getTFile(file_id);
         File downloadToFile = null;
         if ((downloadFilePath != null) && (!downloadFilePath.isEmpty())) {
@@ -881,22 +881,7 @@ public class TelegramBot {
             hfd = new HTTPFileDownloader(downloadableURL, downloadToFile);
         }
         hfd.start();
-        int prevPercent = -1;
-        while (hfd.isAlive()) {
-            if (showDownloadProgress) {
-                if (hfd.getCompletedPercentage() > prevPercent) {
-                    prevPercent = hfd.getCompletedPercentage();
-                    System.out.print(file_id + ": " + prevPercent + "% \r");
-                }
-            }
-        }
-        if (showDownloadProgress) {
-            if (hfd.getFile() == null) {
-                System.out.print(file_id + ": Download Failed.\n");
-            } else {
-                System.out.print(file_id + ": Download Complete.\n");
-            }
-        }
+        while (hfd.isAlive()) {}
         return hfd.getFile();
     }
 
