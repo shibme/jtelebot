@@ -2,7 +2,7 @@
 A Java library for [Telegram Bot API](https://core.telegram.org/bots/api)
 
 ### Build Status ###
-[![Build Status](https://travis-ci.org/shiblymeeran/telegram-bot-java.svg)](https://travis-ci.org/shiblymeeran/telegram-bot-java)
+[![Build Status](https://travis-ci.org/shibme/telegram-bot-java.svg)](https://travis-ci.org/shibme/telegram-bot-java)
 
 ### Maven Dependency for Consumers ###
 Add to your pom.xml:
