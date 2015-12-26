@@ -17,7 +17,8 @@ import java.util.Map;
 public class TelegramBot {
 
     private static final String telegramBotServiceEndPoint = "https://api.telegram.org";
-    private static final int longPollInterval = 300;
+    private static final int defaultLongPollInterval = 300;
+    private static final int defaultUpdateListLength = 100;
 
     private static Map<String, TelegramBot> telegramBotsMap;
 
@@ -777,21 +778,21 @@ public class TelegramBot {
     }
 
     /**
-     * Use this method to receive incoming updates using long polling.
+     * Use this method to receive incoming updates using long polling with the given timeout value.
      *
-     * @param offset  Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
-     * @param limit   Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100
      * @param timeout Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling
-     * @return An Array of Update objects is returned.
+     * @param limit   Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100
+     * @param offset  Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
+     * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public synchronized Update[] getUpdates(long offset, int limit, int timeout) throws IOException {
+    public synchronized Update[] getUpdates(int timeout, int limit, long offset) throws IOException {
         String methodName = "getUpdates";
         ArrayList<Parameter> params = new ArrayList<>();
         if (offset > 0) {
             params.add(new Parameter("offset", "" + offset));
         }
-        if (limit <= 100) {
+        if ((limit > 0) && (limit <= 100)) {
             params.add(new Parameter("limit", "" + limit));
         }
         if (timeout > 0) {
@@ -805,40 +806,50 @@ public class TelegramBot {
     }
 
     /**
-     * Use this method to receive incoming updates using long polling.
+     * Use this method to receive incoming updates using long polling with the given timeout value.
      *
-     * @param offset Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
-     * @param limit  Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100
-     * @return An Array of Update objects is returned.
+     * @param timeout Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling
+     * @param limit   Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100
+     * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public synchronized Update[] getUpdates(long offset, int limit) throws IOException {
-        return getUpdates(offset, limit, longPollInterval);
-    }
-
-    /**
-     * Use this method to receive incoming updates using long polling.
-     *
-     * @param offset Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
-     * @return An Array of Update objects is returned.
-     * @throws IOException an exception is thrown in case of any service call failures
-     */
-    public synchronized Update[] getUpdates(long offset) throws IOException {
-        return getUpdates(offset, 100, longPollInterval);
-    }
-
-    /**
-     * Use this method to receive incoming updates using long polling.
-     *
-     * @return An Array of Update objects is returned.
-     * @throws IOException an exception is thrown in case of any service call failures
-     */
-    public synchronized Update[] getUpdates() throws IOException {
-        Update[] updates = getUpdates(updateServiceOffset, 100, longPollInterval);
+    public synchronized Update[] getUpdates(int timeout, int limit) throws IOException {
+    	Update[] updates = getUpdates(timeout, limit, updateServiceOffset);
         if (updates.length > 0) {
             updateServiceOffset = updates[updates.length - 1].getUpdate_id() + 1;
         }
         return updates;
+    }
+
+    /**
+     * Use this method to receive incoming updates using long polling with the given timeout value.
+     *
+     * @param timeout Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling
+     * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public synchronized Update[] getUpdates(int timeout) throws IOException {
+        return getUpdates(timeout, defaultUpdateListLength);
+    }
+
+    /**
+     * Use this method to receive incoming updates using long polling with timeout value of 5 minutes.
+     *
+     * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public synchronized Update[] getUpdates() throws IOException {
+    	return getUpdates(defaultLongPollInterval);
+    }
+
+    /**
+     * Use this method to receive updates immediately (short polling).
+     *
+     * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public synchronized Update[] getUpdatesImmediately() throws IOException {
+    	return getUpdates(0);
     }
 
     /**

@@ -1,4 +1,4 @@
-# Telegram Bot Java Library
+# Telegram Bot - Java API
 A Java library for [Telegram Bot API](https://core.telegram.org/bots/api)
 
 ### Build Status ###
@@ -11,6 +11,6 @@ Add to your pom.xml:
 <dependency>
 	<groupId>me.shib.java.lib</groupId>
 	<artifactId>telegram-bot-java</artifactId>
-	<version>1.1.2</version>
+	<version>1.2.0</version>
 </dependency>
 ```
