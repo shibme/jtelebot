@@ -31,7 +31,7 @@ public class Message {
     private boolean channel_chat_created;
     private long migrate_to_chat_id;
     private long migrate_from_chat_id;
-    
+
 
     public long getMessage_id() {
         return message_id;
@@ -125,34 +125,34 @@ public class Message {
         return group_chat_created;
     }
 
-	public boolean getSupergroup_chat_created() {
-		return supergroup_chat_created;
-	}
+    public boolean getSupergroup_chat_created() {
+        return supergroup_chat_created;
+    }
 
-	public boolean getChannel_chat_created() {
-		return channel_chat_created;
-	}
+    public boolean getChannel_chat_created() {
+        return channel_chat_created;
+    }
 
-	public long getMigrate_to_chat_id() {
-		return migrate_to_chat_id;
-	}
+    public long getMigrate_to_chat_id() {
+        return migrate_to_chat_id;
+    }
 
-	public long getMigrate_from_chat_id() {
-		return migrate_from_chat_id;
-	}
+    public long getMigrate_from_chat_id() {
+        return migrate_from_chat_id;
+    }
 
-	@Override
-	public String toString() {
-		return "Message [message_id=" + message_id + ", from=" + from + ", date=" + date + ", chat=" + chat
-				+ ", forward_from=" + forward_from + ", forward_date=" + forward_date + ", reply_to_message="
-				+ reply_to_message + ", text=" + text + ", audio=" + audio + ", document=" + document + ", photo="
-				+ Arrays.toString(photo) + ", sticker=" + sticker + ", video=" + video + ", voice=" + voice
-				+ ", caption=" + caption + ", contact=" + contact + ", location=" + location + ", new_chat_participant="
-				+ new_chat_participant + ", left_chat_participant=" + left_chat_participant + ", new_chat_title="
-				+ new_chat_title + ", new_chat_photo=" + Arrays.toString(new_chat_photo) + ", delete_chat_photo="
-				+ delete_chat_photo + ", group_chat_created=" + group_chat_created + ", supergroup_chat_created="
-				+ supergroup_chat_created + ", channel_chat_created=" + channel_chat_created + ", migrate_to_chat_id="
-				+ migrate_to_chat_id + ", migrate_from_chat_id=" + migrate_from_chat_id + "]";
-	}
+    @Override
+    public String toString() {
+        return "Message [message_id=" + message_id + ", from=" + from + ", date=" + date + ", chat=" + chat
+                + ", forward_from=" + forward_from + ", forward_date=" + forward_date + ", reply_to_message="
+                + reply_to_message + ", text=" + text + ", audio=" + audio + ", document=" + document + ", photo="
+                + Arrays.toString(photo) + ", sticker=" + sticker + ", video=" + video + ", voice=" + voice
+                + ", caption=" + caption + ", contact=" + contact + ", location=" + location + ", new_chat_participant="
+                + new_chat_participant + ", left_chat_participant=" + left_chat_participant + ", new_chat_title="
+                + new_chat_title + ", new_chat_photo=" + Arrays.toString(new_chat_photo) + ", delete_chat_photo="
+                + delete_chat_photo + ", group_chat_created=" + group_chat_created + ", supergroup_chat_created="
+                + supergroup_chat_created + ", channel_chat_created=" + channel_chat_created + ", migrate_to_chat_id="
+                + migrate_to_chat_id + ", migrate_from_chat_id=" + migrate_from_chat_id + "]";
+    }
 
 }

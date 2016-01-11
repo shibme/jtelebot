@@ -1,9 +1,21 @@
 package me.shib.java.lib.telegram.bot.types;
 
 public abstract class InlineQueryResult {
-	
-	public enum InlineQueryResultType {
-		article, photo, gif, mpeg4_gif, video
-	}
-	
+
+    public enum InlineQueryResultType {
+        article, photo, gif, mpeg4_gif, video
+    }
+
+    private String id;
+
+    public InlineQueryResult(String id) {
+        this.id = id;
+    }
+
+    public abstract InlineQueryResultType getType();
+
+    public String getId() {
+        return id;
+    }
+
 }
