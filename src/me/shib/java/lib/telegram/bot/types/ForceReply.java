@@ -2,7 +2,7 @@ package me.shib.java.lib.telegram.bot.types;
 
 public class ForceReply implements ReplyMarkup {
 
-    private final Boolean force_reply = Boolean.TRUE;
+    private final boolean force_reply = true;
     private boolean selective;
 
     public ForceReply(boolean selective) {
@@ -13,7 +13,7 @@ public class ForceReply implements ReplyMarkup {
         this.selective = false;
     }
 
-    public Boolean getForce_reply() {
+    public boolean getForce_reply() {
         return force_reply;
     }
 

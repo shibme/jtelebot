@@ -3,7 +3,7 @@ package me.shib.java.lib.telegram.bot.types;
 public class Chat {
 
     public enum ChatType {
-        Private, Group, Channel
+        Private, Group, Supergroup, Channel
     }
 
     private long id;

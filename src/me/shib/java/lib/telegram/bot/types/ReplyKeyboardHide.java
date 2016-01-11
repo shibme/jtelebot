@@ -2,10 +2,10 @@ package me.shib.java.lib.telegram.bot.types;
 
 public class ReplyKeyboardHide implements ReplyMarkup {
 
-    private final Boolean hide_keyboard = Boolean.TRUE;
+    private final boolean hide_keyboard = true;
     private boolean selective;
 
-    public Boolean getHide_keyboard() {
+    public boolean getHide_keyboard() {
         return hide_keyboard;
     }
 

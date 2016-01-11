@@ -709,6 +709,77 @@ public class TelegramBot {
     }
 
     /**
+     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     *
+     * @param inline_query_id   Unique identifier for the answered query
+     * @param results  A JSON-serialized array of results for the inline query
+     * @param next_offset Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
+     * @param is_personal Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
+     * @param cache_time The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal, int cache_time) throws IOException {
+    	String methodName = "answerInlineQuery";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("inline_query_id", inline_query_id));
+        params.add(new Parameter("results", "" + jsonLib.toJson(results)));
+        if(next_offset != null) {
+            params.add(new Parameter("next_offset", next_offset));
+        }
+        if(is_personal) {
+        	params.add(new Parameter("is_personal", "" + is_personal));
+        }
+        if (cache_time >= 0) {
+            params.add(new Parameter("cache_time", "" + cache_time));
+        }
+        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return false;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+    }
+
+    /**
+     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     *
+     * @param inline_query_id   Unique identifier for the answered query
+     * @param results  A JSON-serialized array of results for the inline query
+     * @param next_offset Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
+     * @param is_personal Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal) throws IOException {
+        return answerInlineQuery(inline_query_id, results, next_offset, is_personal, -1);
+    }
+
+    /**
+     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     *
+     * @param inline_query_id   Unique identifier for the answered query
+     * @param results  A JSON-serialized array of results for the inline query
+     * @param next_offset Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset) throws IOException {
+        return answerInlineQuery(inline_query_id, results, next_offset, false);
+    }
+
+    /**
+     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     *
+     * @param inline_query_id   Unique identifier for the answered query
+     * @param results  A JSON-serialized array of results for the inline query
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results) throws IOException {
+        return answerInlineQuery(inline_query_id, results, null);
+    }
+
+    /**
      * Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive.
      *
      * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
