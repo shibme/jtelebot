@@ -2,8 +2,7 @@ package me.shib.java.lib.telegram.bot.types;
 
 public class InlineQueryResultArticle extends InlineQueryResult {
 
-    private static final InlineQueryResultType type = InlineQueryResultType.article;
-
+    private InlineQueryResultType type;
     private String title;
     private String message_text;
     private ParseMode parse_mode;
@@ -17,6 +16,7 @@ public class InlineQueryResultArticle extends InlineQueryResult {
 
     public InlineQueryResultArticle(String id, String title, String message_text) {
         super(id);
+        type = InlineQueryResultType.article;
         this.title = title;
         this.message_text = message_text;
     }

@@ -2,8 +2,7 @@ package me.shib.java.lib.telegram.bot.types;
 
 public class InlineQueryResultPhoto extends InlineQueryResult {
 
-    private static final InlineQueryResultType type = InlineQueryResultType.photo;
-
+    private InlineQueryResultType type;
     private String photo_url;
     private String thumb_url;
     private int photo_width;
@@ -17,6 +16,7 @@ public class InlineQueryResultPhoto extends InlineQueryResult {
 
     public InlineQueryResultPhoto(String id, String photo_url, String thumb_url) {
         super(id);
+        type = InlineQueryResultType.photo;
         this.photo_url = photo_url;
         this.thumb_url = thumb_url;
     }

@@ -2,8 +2,7 @@ package me.shib.java.lib.telegram.bot.types;
 
 public class InlineQueryResultMpeg4Gif extends InlineQueryResult {
 
-    private static final InlineQueryResultType type = InlineQueryResultType.mpeg4_gif;
-
+    private InlineQueryResultType type;
     private String mpeg4_url;
     private String thumb_url;
     private int mpeg4_width;
@@ -16,6 +15,7 @@ public class InlineQueryResultMpeg4Gif extends InlineQueryResult {
 
     public InlineQueryResultMpeg4Gif(String id, String mpeg4_url, String thumb_url) {
         super(id);
+        type = InlineQueryResultType.mpeg4_gif;
         this.mpeg4_url = mpeg4_url;
         this.thumb_url = thumb_url;
     }

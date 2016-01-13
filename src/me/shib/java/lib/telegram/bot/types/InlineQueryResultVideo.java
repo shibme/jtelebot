@@ -2,8 +2,7 @@ package me.shib.java.lib.telegram.bot.types;
 
 public class InlineQueryResultVideo extends InlineQueryResult {
 
-    private static final InlineQueryResultType type = InlineQueryResultType.video;
-
+    private InlineQueryResultType type;
     private String video_url;
     private String thumb_url;
     private String mime_type;
@@ -18,6 +17,7 @@ public class InlineQueryResultVideo extends InlineQueryResult {
 
     public InlineQueryResultVideo(String id, String video_url, String thumb_url, String mime_type, String message_text, String title) {
         super(id);
+        type = InlineQueryResultType.video;
         this.video_url = video_url;
         this.thumb_url = thumb_url;
         this.mime_type = mime_type;
