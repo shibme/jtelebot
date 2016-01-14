@@ -944,28 +944,46 @@ public class TelegramBot {
     /**
      * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
      *
-     * @param file_id          File identifier to for the file to be downloaded
-     * @param downloadFilePath The local path where the file has to be downloaded
+     * @param file_id           File identifier to for the file to be downloaded
+     * @param downloadToFile    The local file where the content has to be downloaded
+     * @param waitForCompletion Waits until the download is complete
      * @return On success, a File object is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public File downloadTFile(String file_id, String downloadFilePath) throws IOException {
+    public HTTPFileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException {
         TelegramFile tFile = getTFile(file_id);
-        File downloadToFile = null;
-        if ((downloadFilePath != null) && (!downloadFilePath.isEmpty())) {
-            downloadToFile = new File(downloadFilePath);
-        }
         String downloadableURL = telegramBotServiceEndPoint + "/file/bot" + botApiToken + "/" + tFile.getFile_path();
-        HTTPFileDownloader hfd = null;
+        HTTPFileDownloader hfd;
         if (downloadToFile == null) {
             hfd = new HTTPFileDownloader(downloadableURL, "TelegramBotDownloads");
         } else {
             hfd = new HTTPFileDownloader(downloadableURL, downloadToFile);
         }
         hfd.start();
-        while (hfd.isAlive()) {
+        if (waitForCompletion) {
+            try {
+                hfd.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        return hfd.getFile();
+        return hfd.getDownloadProgress();
+    }
+
+    /**
+     * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
+     *
+     * @param file_id        File identifier to for the file to be downloaded
+     * @param downloadToFile The local file where the content has to be downloaded
+     * @return On success, a File object is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public File downloadFile(String file_id, File downloadToFile) throws IOException {
+        HTTPFileDownloader.DownloadProgress progress = downloadToFile(file_id, downloadToFile, true);
+        if (progress.getStatus() == HTTPFileDownloader.DownloadStatus.COMPLETED) {
+            return progress.getDownloadedFile();
+        }
+        return null;
     }
 
     /**
@@ -975,8 +993,8 @@ public class TelegramBot {
      * @return On success, a File object is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public File downloadTFile(String file_id) throws IOException {
-        return downloadTFile(file_id, null);
+    public File downloadFile(String file_id) throws IOException {
+        return downloadFile(file_id, null);
     }
 
     /**

@@ -12,14 +12,6 @@ public class User {
         this.first_name = first_name;
     }
 
-    protected void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
-    protected void setUsername(String username) {
-        this.username = username;
-    }
-
     public long getId() {
         return id;
     }
@@ -32,8 +24,16 @@ public class User {
         return last_name;
     }
 
+    protected void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
     public String getUsername() {
         return username;
+    }
+
+    protected void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

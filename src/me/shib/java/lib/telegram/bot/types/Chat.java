@@ -2,10 +2,6 @@ package me.shib.java.lib.telegram.bot.types;
 
 public class Chat {
 
-    public enum ChatType {
-        Private, Group, Supergroup, Channel
-    }
-
     private long id;
     private String type;
     private String title;
@@ -44,6 +40,10 @@ public class Chat {
     public ChatType getType() {
         String expectedType = type.toLowerCase().substring(0, 1).toUpperCase() + type.toLowerCase().substring(1);
         return ChatType.valueOf(expectedType);
+    }
+
+    public enum ChatType {
+        Private, Group, Supergroup, Channel
     }
 
 }

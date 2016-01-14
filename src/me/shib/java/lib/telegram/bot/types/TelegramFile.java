@@ -35,16 +35,16 @@ public class TelegramFile {
         return file;
     }
 
+    public void setFile(File file) {
+        this.file = file;
+    }
+
     public long getFile_size() {
         return file_size;
     }
 
     public String getFile_path() {
         return file_path;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
     }
 
     @Override
