@@ -74,7 +74,7 @@ public class TelegramBot {
      */
     public User getMe() throws IOException {
         String methodName = "getMe";
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, null);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.get(methodName, null);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }

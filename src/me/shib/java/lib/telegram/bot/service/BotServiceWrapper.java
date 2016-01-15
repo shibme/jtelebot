@@ -12,6 +12,7 @@ public class BotServiceWrapper {
 
     private ServiceAdapter serviceAdapter;
     private JsonLib jsonLib;
+
     public BotServiceWrapper(String endPoint, JsonLib jsonLib) {
         serviceAdapter = new ServiceAdapter(endPoint);
         this.jsonLib = jsonLib;
@@ -23,6 +24,15 @@ public class BotServiceWrapper {
             return null;
         }
         return jsonLib.fromJson(serviceResponse.getResponse(), BotServiceResponse.class);
+    }
+
+    public BotServiceResponse get(String apiName, ArrayList<Parameter> params) throws IOException {
+        ServiceResponse serviceResponse = serviceAdapter.get(apiName, params);
+        if (serviceResponse.getStatusCode() != 200) {
+            return null;
+        }
+        BotServiceResponse response = jsonLib.fromJson(serviceResponse.getResponse(), BotServiceResponse.class);
+        return response;
     }
 
     public class BotServiceResponse {
