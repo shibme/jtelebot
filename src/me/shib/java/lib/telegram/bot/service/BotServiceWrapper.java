@@ -12,36 +12,35 @@ public class BotServiceWrapper {
 
     private ServiceAdapter serviceAdapter;
     private JsonLib jsonLib;
-
     public BotServiceWrapper(String endPoint, JsonLib jsonLib) {
         serviceAdapter = new ServiceAdapter(endPoint);
         this.jsonLib = jsonLib;
     }
 
-    public BotServiceWrapperResponse post(String apiName, ArrayList<Parameter> params) throws IOException {
+    public BotServiceResponse post(String apiName, ArrayList<Parameter> params) throws IOException {
         ServiceResponse serviceResponse = serviceAdapter.post(apiName, params);
         if (serviceResponse.getStatusCode() != 200) {
             return null;
         }
-        BotServiceWrapperResponse response = jsonLib.fromJson(serviceResponse.getResponse(), BotServiceWrapperResponse.class);
-        return response;
+        return jsonLib.fromJson(serviceResponse.getResponse(), BotServiceResponse.class);
     }
 
-    public BotServiceWrapperResponse post(String apiName) throws IOException {
-        return post(apiName, null);
-    }
+    public class BotServiceResponse {
+        private boolean ok;
+        private Object result;
 
-    public BotServiceWrapperResponse get(String apiName, ArrayList<Parameter> params) throws IOException {
-        ServiceResponse serviceResponse = serviceAdapter.get(apiName, params);
-        if (serviceResponse.getStatusCode() != 200) {
-            return null;
+        private BotServiceResponse() {
+            this.ok = false;
+            this.result = null;
         }
-        BotServiceWrapperResponse response = jsonLib.fromJson(serviceResponse.getResponse(), BotServiceWrapperResponse.class);
-        return response;
-    }
 
-    public BotServiceWrapperResponse get(String apiName) throws IOException {
-        return get(apiName, null);
+        public boolean isOk() {
+            return ok;
+        }
+
+        public Object getResult() {
+            return result;
+        }
     }
 
 }

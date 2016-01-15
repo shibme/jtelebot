@@ -74,7 +74,7 @@ public class TelegramBot {
      */
     public User getMe() throws IOException {
         String methodName = "getMe";
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.get(methodName);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, null);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -110,7 +110,7 @@ public class TelegramBot {
         if (null != reply_markup) {
             params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -186,7 +186,7 @@ public class TelegramBot {
         params.add(new Parameter("chat_id", chat_id.getChatId()));
         params.add(new Parameter("from_chat_id", from_chat_id.getChatId()));
         params.add(new Parameter("message_id", "" + message_id));
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -222,7 +222,7 @@ public class TelegramBot {
         if (null != reply_markup) {
             params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -305,7 +305,7 @@ public class TelegramBot {
         if (null != reply_markup) {
             params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -393,7 +393,7 @@ public class TelegramBot {
         if (null != reply_markup) {
             params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -450,7 +450,7 @@ public class TelegramBot {
         if (null != reply_markup) {
             params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -515,7 +515,7 @@ public class TelegramBot {
         if (null != reply_markup) {
             params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -605,7 +605,7 @@ public class TelegramBot {
         if (null != reply_markup) {
             params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -674,7 +674,7 @@ public class TelegramBot {
         if (null != reply_markup) {
             params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -733,7 +733,7 @@ public class TelegramBot {
         if (cache_time >= 0) {
             params.add(new Parameter("cache_time", "" + cache_time));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
@@ -792,7 +792,7 @@ public class TelegramBot {
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("chat_id", chat_id.getChatId()));
         params.add(new Parameter("action", "" + action));
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
@@ -818,7 +818,7 @@ public class TelegramBot {
         if ((limit > 0) && (limit < 100)) {
             params.add(new Parameter("limit", "" + limit));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -869,7 +869,7 @@ public class TelegramBot {
         if (timeout > 0) {
             params.add(new Parameter("timeout", "" + timeout));
         }
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return new Update[0];
         }
@@ -934,7 +934,7 @@ public class TelegramBot {
         String methodName = "getFile";
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("file_id", "" + file_id));
-        BotServiceWrapperResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
