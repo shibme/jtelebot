@@ -98,7 +98,7 @@ public class TelegramBot {
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("chat_id", chat_id.getChatId()));
         params.add(new Parameter("text", text));
-        if ((parse_mode != null) && (parse_mode != ParseMode.None)) {
+        if (parse_mode != null) {
             params.add(new Parameter("parse_mode", parse_mode.toString()));
         }
         if (disable_web_page_preview) {
@@ -168,7 +168,7 @@ public class TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendMessage(ChatId chat_id, String text) throws IOException {
-        return sendMessage(chat_id, text, ParseMode.None);
+        return sendMessage(chat_id, text, null);
     }
 
     /**
