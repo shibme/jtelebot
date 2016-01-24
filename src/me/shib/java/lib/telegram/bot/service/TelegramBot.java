@@ -20,12 +20,13 @@ public class TelegramBot {
     private static final int defaultLongPollInterval = 300;
     private static final int defaultUpdateListLength = 100;
 
-    private static Map<String, TelegramBot> telegramBotsMap;
+    private static Map<String, TelegramBot> botMap;
 
     private String botApiToken;
     private long updateServiceOffset = 0;
     private JsonLib jsonLib;
     private BotServiceWrapper botServiceWrapper;
+    private User identity;
 
     private TelegramBot(String botApiToken) {
         this.botApiToken = botApiToken;
@@ -33,28 +34,29 @@ public class TelegramBot {
         botServiceWrapper = new BotServiceWrapper(telegramBotServiceEndPoint + "/" + "bot" + botApiToken, jsonLib);
     }
 
-    /*
-    A private constructor to prevent other classes from initializing
-    */
-    private TelegramBot() {
-    }
-
     /**
      * Creates a singleton object for the given bot API token. For every unique API token, a singleton object is created.
      *
      * @param botApiToken the API token that is given by @BotFather bot
-     * @return A singleton instance for the given API token
+     * @return A singleton instance of the bot for the given API token. Returns null if the token is invalid.
      */
     public static synchronized TelegramBot getInstance(String botApiToken) {
-        if (telegramBotsMap == null) {
-            telegramBotsMap = new HashMap<>();
+        if ((botApiToken == null) || (botApiToken.isEmpty())) {
+            return null;
         }
-        TelegramBot tBot = telegramBotsMap.get(botApiToken);
-        if (tBot == null) {
-            tBot = new TelegramBot(botApiToken);
-            telegramBotsMap.put(botApiToken, tBot);
+        if (botMap == null) {
+            botMap = new HashMap<>();
         }
-        return tBot;
+        TelegramBot bot = botMap.get(botApiToken);
+        if (bot == null) {
+            bot = new TelegramBot(botApiToken);
+            if (bot.getIdentity() != null) {
+                botMap.put(botApiToken, bot);
+            } else {
+                bot = null;
+            }
+        }
+        return bot;
     }
 
     /**
@@ -79,6 +81,22 @@ public class TelegramBot {
             return null;
         }
         return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), User.class);
+    }
+
+    /**
+     * A simple method for getting your bot's last known identity. Updates the identity only when getMe is called.
+     *
+     * @return basic information about the bot in form of a User object.
+     */
+    public User getIdentity() {
+        if (identity == null) {
+            try {
+                identity = getMe();
+            } catch (IOException e) {
+                identity = null;
+            }
+        }
+        return identity;
     }
 
     /**
