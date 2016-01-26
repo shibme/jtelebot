@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.shib.java.lib</groupId>
-    <artifactId>telegram-bot-java</artifactId>
-    <version>1.3.7</version>
-    <name>Telegram Bot - Java API</name>
+    <artifactId>jtelebot</artifactId>
+    <version>0.8</version>
+    <name>JTeleBot</name>
     <description>A Java library for Telegram Bot API</description>
-    <url>https://github.com/shibme/telegram-bot-java</url>
+    <url>https://github.com/shibme/jtelebot</url>
 
     <issueManagement>
-        <url>https://github.com/shibme/telegram-bot-java/issues</url>
+        <url>https://github.com/shibme/jtelebot/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 
@@ -24,9 +24,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/shibme/telegram-bot-java</url>
-        <connection>scm:git:https://github.com/shibme/telegram-bot-java.git</connection>
-        <developerConnection>scm:git:shibme@github.com:shibme/telegram-bot-java.git</developerConnection>
+        <url>https://github.com/shibme/jtelebot</url>
+        <connection>scm:git:https://github.com/shibme/jtelebot.git</connection>
+        <developerConnection>scm:git:shibme@github.com:shibme/jtelebot.git</developerConnection>
     </scm>
 
     <developers>

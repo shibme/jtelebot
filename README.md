@@ -1,8 +1,8 @@
-# Telegram Bot - Java API
+# JTeleBot
 A Java library for [Telegram Bot API](https://core.telegram.org/bots/api)
 
 ### Build Status ###
-[![Build Status](https://travis-ci.org/shibme/telegram-bot-java.svg)](https://travis-ci.org/shibme/telegram-bot-java)
+[![Build Status](https://travis-ci.org/shibme/jtelebot.svg)](https://travis-ci.org/shibme/jtelebot)
 
 ### Maven Dependency for Consumers ###
 Add to your pom.xml:
@@ -10,7 +10,7 @@ Add to your pom.xml:
 ```xml
 <dependency>
 	<groupId>me.shib.java.lib</groupId>
-	<artifactId>telegram-bot-java</artifactId>
-	<version>1.3.7</version>
+	<artifactId>jtelebot</artifactId>
+	<version>0.8</version>
 </dependency>
 ```
