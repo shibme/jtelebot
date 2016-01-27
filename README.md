@@ -11,11 +11,11 @@ Add to your pom.xml:
 <dependency>
 	<groupId>me.shib.java.lib</groupId>
 	<artifactId>jtelebot</artifactId>
-	<version>0.8.2</version>
+	<version>0.8.3</version>
 </dependency>
 ```
 
-### How to start
+### Example
 Start by creating an instance of the TelegramBot with the API token you get from [@BotFather](https://telegram.me/BotFather)
 
 ```java

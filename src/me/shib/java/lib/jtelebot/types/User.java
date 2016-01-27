@@ -2,15 +2,10 @@ package me.shib.java.lib.jtelebot.types;
 
 public class User {
 
-    private long id;
-    private String first_name;
-    private String last_name;
-    private String username;
-
-    protected User(long id, String first_name) {
-        this.id = id;
-        this.first_name = first_name;
-    }
+    protected long id;
+    protected String first_name;
+    protected String last_name;
+    protected String username;
 
     public long getId() {
         return id;
@@ -24,16 +19,8 @@ public class User {
         return last_name;
     }
 
-    protected void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    protected void setUsername(String username) {
-        this.username = username;
     }
 
     @Override
