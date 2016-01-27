@@ -5,7 +5,7 @@ A Java library for [Telegram Bot API](https://core.telegram.org/bots/api)
 [![Build Status](https://travis-ci.org/shibme/jtelebot.svg)](https://travis-ci.org/shibme/jtelebot)
 
 ### Maven Dependency for Consumers
-Add to your `pom.xml`:
+Add to your `pom.xml`
 
 ```xml
 <dependency>
