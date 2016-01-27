@@ -5,7 +5,7 @@ A Java library for [Telegram Bot API](https://core.telegram.org/bots/api)
 [![Build Status](https://travis-ci.org/shibme/jtelebot.svg)](https://travis-ci.org/shibme/jtelebot)
 
 ### Maven Dependency for Consumers
-Add to your pom.xml:
+Add to your `pom.xml`:
 
 ```xml
 <dependency>
@@ -16,7 +16,7 @@ Add to your pom.xml:
 ```
 
 ### Example
-Start by creating an instance of the TelegramBot with the API token you get from [@BotFather](https://telegram.me/BotFather)
+Start by creating an instance of the `me.shib.java.lib.jtelebot.TelegramBot` with the API token you get from [@BotFather](https://telegram.me/BotFather)
 
 ```java
 TelegramBot bot = TelegramBot.getInstance("YourBotApiTokenGoesHere");
