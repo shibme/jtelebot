@@ -1,12 +1,38 @@
 package me.shib.java.lib.jtelebot.service;
 
+import me.shib.java.lib.common.utils.JsonLib;
 import me.shib.java.lib.jtelebot.types.*;
 import me.shib.java.lib.rest.client.HTTPFileDownloader;
+import me.shib.java.lib.rest.client.Parameter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public abstract class TelegramBot {
+/**
+ * Create an instance for this class with your Bot API token. Instances are singleton and for every new API token.
+ */
+public class BotService extends TelegramBot {
+
+    private static final String telegramBotServiceEndPoint = "https://api.telegram.org";
+    private static final int defaultLongPollInterval = 300;
+    private static final int defaultUpdateListLength = 100;
+
+    private static Map<String, BotService> botMap;
+
+    private String botApiToken;
+    private long updateServiceOffset = 0;
+    private JsonLib jsonLib;
+    private BotServiceWrapper botServiceWrapper;
+    private User identity;
+
+    private BotService(String botApiToken) {
+        this.botApiToken = botApiToken;
+        jsonLib = new JsonLib();
+        botServiceWrapper = new BotServiceWrapper(telegramBotServiceEndPoint + "/" + "bot" + botApiToken, jsonLib);
+    }
 
     /**
      * Creates a singleton object for the given bot API token. For every unique API token, a singleton object is created.
@@ -14,8 +40,23 @@ public abstract class TelegramBot {
      * @param botApiToken the API token that is given by @BotFather bot
      * @return A singleton instance of the bot for the given API token. Returns null if the token is invalid.
      */
-    public static synchronized TelegramBot getInstance(String botApiToken) {
-        return BotService.getInstance(botApiToken);
+    public static synchronized BotService getInstance(String botApiToken) {
+        if ((botApiToken == null) || (botApiToken.isEmpty())) {
+            return null;
+        }
+        if (botMap == null) {
+            botMap = new HashMap<>();
+        }
+        BotService bot = botMap.get(botApiToken);
+        if (bot == null) {
+            bot = new BotService(botApiToken);
+            if (bot.getIdentity() != null) {
+                botMap.put(botApiToken, bot);
+            } else {
+                bot = null;
+            }
+        }
+        return bot;
     }
 
     /**
@@ -23,7 +64,9 @@ public abstract class TelegramBot {
      *
      * @return the API token of the bot is returned.
      */
-    public abstract String getBotApiToken();
+    public String getBotApiToken() {
+        return botApiToken;
+    }
 
     /**
      * A simple method for testing your bot's auth token.
@@ -31,14 +74,30 @@ public abstract class TelegramBot {
      * @return basic information about the bot in form of a User object.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract User getMe() throws IOException;
+    public User getMe() throws IOException {
+        String methodName = "getMe";
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.get(methodName, null);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), User.class);
+    }
 
     /**
      * A simple method for getting your bot's last known identity. Updates the identity only when getMe is called.
      *
      * @return basic information about the bot in form of a User object.
      */
-    public abstract User getIdentity();
+    public User getIdentity() {
+        if (identity == null) {
+            try {
+                identity = getMe();
+            } catch (IOException e) {
+                identity = null;
+            }
+        }
+        return identity;
+    }
 
     /**
      * Use this method to send text messages.
@@ -52,7 +111,29 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        String methodName = "sendMessage";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        params.add(new Parameter("text", text));
+        if (parse_mode != null) {
+            params.add(new Parameter("parse_mode", parse_mode.toString()));
+        }
+        if (disable_web_page_preview) {
+            params.add(new Parameter("disable_web_page_preview", "" + true));
+        }
+        if (reply_to_message_id > 0) {
+            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
 
     /**
      * Use this method to send text messages.
@@ -65,7 +146,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id) throws IOException;
+    public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id) throws IOException {
+        return sendMessage(chat_id, text, parse_mode, disable_web_page_preview, reply_to_message_id, null);
+    }
 
     /**
      * Use this method to send text messages.
@@ -77,7 +160,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview) throws IOException;
+    public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview) throws IOException {
+        return sendMessage(chat_id, text, parse_mode, disable_web_page_preview, 0);
+    }
 
     /**
      * Use this method to send text messages.
@@ -88,7 +173,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode) throws IOException;
+    public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode) throws IOException {
+        return sendMessage(chat_id, text, parse_mode, false);
+    }
 
     /**
      * Use this method to send text messages.
@@ -98,7 +185,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendMessage(ChatId chat_id, String text) throws IOException;
+    public Message sendMessage(ChatId chat_id, String text) throws IOException {
+        return sendMessage(chat_id, text, null);
+    }
 
     /**
      * Use this method to forward messages of any kind.
@@ -109,7 +198,18 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message forwardMessage(ChatId chat_id, ChatId from_chat_id, long message_id) throws IOException;
+    public Message forwardMessage(ChatId chat_id, ChatId from_chat_id, long message_id) throws IOException {
+        String methodName = "forwardMessage";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        params.add(new Parameter("from_chat_id", from_chat_id.getChatId()));
+        params.add(new Parameter("message_id", "" + message_id));
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
 
     /**
      * Use this method to send photos.
@@ -122,7 +222,30 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        String methodName = "sendPhoto";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        if (null != photo.getFile_id()) {
+            params.add(new Parameter("photo", photo.getFile_id()));
+        } else {
+            params.add(new Parameter("photo", photo.getFile()));
+        }
+        if ((null != caption) && (!caption.isEmpty())) {
+            params.add(new Parameter("caption", caption));
+        }
+        if (reply_to_message_id > 0) {
+            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
 
     /**
      * Use this method to send photos.
@@ -134,7 +257,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption, long reply_to_message_id) throws IOException;
+    public Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption, long reply_to_message_id) throws IOException {
+        return sendPhoto(chat_id, photo, caption, reply_to_message_id, null);
+    }
 
     /**
      * Use this method to send photos.
@@ -145,7 +270,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption) throws IOException;
+    public Message sendPhoto(ChatId chat_id, TelegramFile photo, String caption) throws IOException {
+        return sendPhoto(chat_id, photo, caption, 0);
+    }
 
     /**
      * Use this method to send photos.
@@ -155,7 +282,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendPhoto(ChatId chat_id, TelegramFile photo) throws IOException;
+    public Message sendPhoto(ChatId chat_id, TelegramFile photo) throws IOException {
+        return sendPhoto(chat_id, photo, null);
+    }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
@@ -170,7 +299,36 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        String methodName = "sendAudio";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        if (null != audio.getFile_id()) {
+            params.add(new Parameter("audio", audio.getFile_id()));
+        } else {
+            params.add(new Parameter("audio", audio.getFile()));
+        }
+        if (duration > 0) {
+            params.add(new Parameter("duration", "" + duration));
+        }
+        if ((null != performer) && (!performer.isEmpty())) {
+            params.add(new Parameter("performer", performer));
+        }
+        if ((null != title) && (!title.isEmpty())) {
+            params.add(new Parameter("title", title));
+        }
+        if (reply_to_message_id > 0) {
+            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
@@ -184,7 +342,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title, long reply_to_message_id) throws IOException;
+    public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title, long reply_to_message_id) throws IOException {
+        return sendAudio(chat_id, audio, duration, performer, title, reply_to_message_id, null);
+    }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
@@ -197,7 +357,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title) throws IOException;
+    public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration, String performer, String title) throws IOException {
+        return sendAudio(chat_id, audio, duration, performer, title, 0);
+    }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
@@ -208,7 +370,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendAudio(ChatId chat_id, TelegramFile audio, int duration) throws IOException;
+    public Message sendAudio(ChatId chat_id, TelegramFile audio, int duration) throws IOException {
+        return sendAudio(chat_id, audio, duration, null, null);
+    }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
@@ -218,7 +382,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendAudio(ChatId chat_id, TelegramFile audio) throws IOException;
+    public Message sendAudio(ChatId chat_id, TelegramFile audio) throws IOException {
+        return sendAudio(chat_id, audio, 0);
+    }
 
     /**
      * Use this method to send general files. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
@@ -230,7 +396,27 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendDocument(ChatId chat_id, TelegramFile document, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public Message sendDocument(ChatId chat_id, TelegramFile document, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        String methodName = "sendDocument";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        if (null != document.getFile_id()) {
+            params.add(new Parameter("document", document.getFile_id()));
+        } else {
+            params.add(new Parameter("document", document.getFile()));
+        }
+        if (reply_to_message_id > 0) {
+            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
 
     /**
      * Use this method to send general files. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
@@ -241,7 +427,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendDocument(ChatId chat_id, TelegramFile document, long reply_to_message_id) throws IOException;
+    public Message sendDocument(ChatId chat_id, TelegramFile document, long reply_to_message_id) throws IOException {
+        return sendDocument(chat_id, document, reply_to_message_id, null);
+    }
 
     /**
      * Use this method to send general files. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
@@ -251,7 +439,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendDocument(ChatId chat_id, TelegramFile document) throws IOException;
+    public Message sendDocument(ChatId chat_id, TelegramFile document) throws IOException {
+        return sendDocument(chat_id, document, 0);
+    }
 
     /**
      * Use this method to send .webp stickers.
@@ -263,7 +453,27 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendSticker(ChatId chat_id, TelegramFile sticker, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public Message sendSticker(ChatId chat_id, TelegramFile sticker, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        String methodName = "sendSticker";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        if (null != sticker.getFile_id()) {
+            params.add(new Parameter("sticker", sticker.getFile_id()));
+        } else {
+            params.add(new Parameter("sticker", sticker.getFile()));
+        }
+        if (reply_to_message_id > 0) {
+            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
 
     /**
      * Use this method to send .webp stickers.
@@ -274,7 +484,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendSticker(ChatId chat_id, TelegramFile sticker, long reply_to_message_id) throws IOException;
+    public Message sendSticker(ChatId chat_id, TelegramFile sticker, long reply_to_message_id) throws IOException {
+        return sendSticker(chat_id, sticker, reply_to_message_id, null);
+    }
 
     /**
      * Use this method to send .webp stickers.
@@ -284,7 +496,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendSticker(ChatId chat_id, TelegramFile sticker) throws IOException;
+    public Message sendSticker(ChatId chat_id, TelegramFile sticker) throws IOException {
+        return sendSticker(chat_id, sticker, 0);
+    }
 
     /**
      * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
@@ -298,7 +512,33 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        String methodName = "sendVideo";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        if (null != video.getFile_id()) {
+            params.add(new Parameter("video", video.getFile_id()));
+        } else {
+            params.add(new Parameter("video", video.getFile()));
+        }
+        if (duration > 0) {
+            params.add(new Parameter("duration", "" + duration));
+        }
+        if ((null != caption) && (!caption.isEmpty())) {
+            params.add(new Parameter("performer", caption));
+        }
+        if (reply_to_message_id > 0) {
+            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
 
     /**
      * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
@@ -311,7 +551,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption, long reply_to_message_id) throws IOException;
+    public Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption, long reply_to_message_id) throws IOException {
+        return sendVideo(chat_id, video, duration, caption, reply_to_message_id, null);
+    }
 
     /**
      * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
@@ -323,7 +565,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption) throws IOException;
+    public Message sendVideo(ChatId chat_id, TelegramFile video, int duration, String caption) throws IOException {
+        return sendVideo(chat_id, video, duration, caption, 0);
+    }
 
     /**
      * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
@@ -334,7 +578,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVideo(ChatId chat_id, TelegramFile video, int duration) throws IOException;
+    public Message sendVideo(ChatId chat_id, TelegramFile video, int duration) throws IOException {
+        return sendVideo(chat_id, video, duration, null);
+    }
 
     /**
      * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
@@ -344,7 +590,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVideo(ChatId chat_id, TelegramFile video) throws IOException;
+    public Message sendVideo(ChatId chat_id, TelegramFile video) throws IOException {
+        return sendVideo(chat_id, video, 0);
+    }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
@@ -357,7 +605,30 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVoice(ChatId chat_id, TelegramFile voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public Message sendVoice(ChatId chat_id, TelegramFile voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        String methodName = "sendVoice";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        if (null != voice.getFile_id()) {
+            params.add(new Parameter("voice", voice.getFile_id()));
+        } else {
+            params.add(new Parameter("voice", voice.getFile()));
+        }
+        if (duration > 0) {
+            params.add(new Parameter("duration", "" + duration));
+        }
+        if (reply_to_message_id > 0) {
+            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
@@ -369,7 +640,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVoice(ChatId chat_id, TelegramFile voice, int duration, long reply_to_message_id) throws IOException;
+    public Message sendVoice(ChatId chat_id, TelegramFile voice, int duration, long reply_to_message_id) throws IOException {
+        return sendVoice(chat_id, voice, duration, reply_to_message_id, null);
+    }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
@@ -380,7 +653,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVoice(ChatId chat_id, TelegramFile voice, int duration) throws IOException;
+    public Message sendVoice(ChatId chat_id, TelegramFile voice, int duration) throws IOException {
+        return sendVoice(chat_id, voice, duration, 0);
+    }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
@@ -390,7 +665,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVoice(ChatId chat_id, TelegramFile voice) throws IOException;
+    public Message sendVoice(ChatId chat_id, TelegramFile voice) throws IOException {
+        return sendVoice(chat_id, voice, 0);
+    }
 
     /**
      * Use this method to send point on the map.
@@ -403,7 +680,24 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        String methodName = "sendLocation";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        params.add(new Parameter("latitude", "" + latitude));
+        params.add(new Parameter("longitude", "" + longitude));
+        if (reply_to_message_id > 0) {
+            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
 
     /**
      * Use this method to send point on the map.
@@ -415,7 +709,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id) throws IOException;
+    public Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id) throws IOException {
+        return sendLocation(chat_id, latitude, longitude, reply_to_message_id, null);
+    }
 
     /**
      * Use this method to send point on the map.
@@ -426,7 +722,9 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendLocation(ChatId chat_id, float latitude, float longitude) throws IOException;
+    public Message sendLocation(ChatId chat_id, float latitude, float longitude) throws IOException {
+        return sendLocation(chat_id, latitude, longitude, 0);
+    }
 
     /**
      * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
@@ -439,7 +737,26 @@ public abstract class TelegramBot {
      * @return On success, returns True.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal, int cache_time) throws IOException;
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal, int cache_time) throws IOException {
+        String methodName = "answerInlineQuery";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("inline_query_id", inline_query_id));
+        params.add(new Parameter("results", "" + jsonLib.toJson(results)));
+        if (next_offset != null) {
+            params.add(new Parameter("next_offset", next_offset));
+        }
+        if (is_personal) {
+            params.add(new Parameter("is_personal", "" + true));
+        }
+        if (cache_time >= 0) {
+            params.add(new Parameter("cache_time", "" + cache_time));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return false;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+    }
 
     /**
      * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
@@ -451,7 +768,9 @@ public abstract class TelegramBot {
      * @return On success, returns True.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal) throws IOException;
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal) throws IOException {
+        return answerInlineQuery(inline_query_id, results, next_offset, is_personal, -1);
+    }
 
     /**
      * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
@@ -462,7 +781,9 @@ public abstract class TelegramBot {
      * @return On success, returns True.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset) throws IOException;
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset) throws IOException {
+        return answerInlineQuery(inline_query_id, results, next_offset, false);
+    }
 
     /**
      * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
@@ -472,7 +793,9 @@ public abstract class TelegramBot {
      * @return On success, returns True.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results) throws IOException;
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results) throws IOException {
+        return answerInlineQuery(inline_query_id, results, null);
+    }
 
     /**
      * Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive.
@@ -482,7 +805,17 @@ public abstract class TelegramBot {
      * @return On success, returns True.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract boolean sendChatAction(ChatId chat_id, ChatAction action) throws IOException;
+    public boolean sendChatAction(ChatId chat_id, ChatAction action) throws IOException {
+        String methodName = "sendChatAction";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        params.add(new Parameter("action", "" + action));
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return false;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), boolean.class);
+    }
 
     /**
      * Use this method to get a list of profile pictures for a user.
@@ -493,7 +826,22 @@ public abstract class TelegramBot {
      * @return Returns a UserProfilePhotos object.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract UserProfilePhotos getUserProfilePhotos(long user_id, int offset, int limit) throws IOException;
+    public UserProfilePhotos getUserProfilePhotos(long user_id, int offset, int limit) throws IOException {
+        String methodName = "getUserProfilePhotos";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("user_id", "" + user_id));
+        if (offset > 0) {
+            params.add(new Parameter("offset", "" + offset));
+        }
+        if ((limit > 0) && (limit < 100)) {
+            params.add(new Parameter("limit", "" + limit));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), UserProfilePhotos.class);
+    }
 
     /**
      * Use this method to get a list of profile pictures for a user.
@@ -503,7 +851,9 @@ public abstract class TelegramBot {
      * @return Returns a UserProfilePhotos object.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract UserProfilePhotos getUserProfilePhotos(long user_id, int offset) throws IOException;
+    public UserProfilePhotos getUserProfilePhotos(long user_id, int offset) throws IOException {
+        return getUserProfilePhotos(user_id, offset, 100);
+    }
 
     /**
      * Use this method to get a list of profile pictures for a user.
@@ -512,7 +862,9 @@ public abstract class TelegramBot {
      * @return Returns a UserProfilePhotos object.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract UserProfilePhotos getUserProfilePhotos(long user_id) throws IOException;
+    public UserProfilePhotos getUserProfilePhotos(long user_id) throws IOException {
+        return getUserProfilePhotos(user_id, 0);
+    }
 
     /**
      * Use this method to receive incoming updates using long polling with the given timeout value.
@@ -523,7 +875,24 @@ public abstract class TelegramBot {
      * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Update[] getUpdates(int timeout, int limit, long offset) throws IOException;
+    public synchronized Update[] getUpdates(int timeout, int limit, long offset) throws IOException {
+        String methodName = "getUpdates";
+        ArrayList<Parameter> params = new ArrayList<>();
+        if (offset > 0) {
+            params.add(new Parameter("offset", "" + offset));
+        }
+        if ((limit > 0) && (limit <= 100)) {
+            params.add(new Parameter("limit", "" + limit));
+        }
+        if (timeout > 0) {
+            params.add(new Parameter("timeout", "" + timeout));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return new Update[0];
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Update[].class);
+    }
 
     /**
      * Use this method to receive incoming updates using long polling with the given timeout value.
@@ -533,7 +902,13 @@ public abstract class TelegramBot {
      * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Update[] getUpdates(int timeout, int limit) throws IOException;
+    public synchronized Update[] getUpdates(int timeout, int limit) throws IOException {
+        Update[] updates = getUpdates(timeout, limit, updateServiceOffset);
+        if (updates.length > 0) {
+            updateServiceOffset = updates[updates.length - 1].getUpdate_id() + 1;
+        }
+        return updates;
+    }
 
     /**
      * Use this method to receive incoming updates using long polling with the given timeout value.
@@ -542,7 +917,9 @@ public abstract class TelegramBot {
      * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Update[] getUpdates(int timeout) throws IOException;
+    public synchronized Update[] getUpdates(int timeout) throws IOException {
+        return getUpdates(timeout, defaultUpdateListLength);
+    }
 
     /**
      * Use this method to receive incoming updates using long polling with timeout value of 5 minutes.
@@ -550,7 +927,9 @@ public abstract class TelegramBot {
      * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Update[] getUpdates() throws IOException;
+    public synchronized Update[] getUpdates() throws IOException {
+        return getUpdates(defaultLongPollInterval);
+    }
 
     /**
      * Use this method to receive updates immediately (short polling).
@@ -558,7 +937,9 @@ public abstract class TelegramBot {
      * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Update[] getUpdatesImmediately() throws IOException;
+    public synchronized Update[] getUpdatesImmediately() throws IOException {
+        return getUpdates(0);
+    }
 
     /**
      * Use this method to get a TelegramFile object for downloading. For the moment, bots can download files of up to 20MB in size.
@@ -567,7 +948,16 @@ public abstract class TelegramBot {
      * @return On success, a TelegramFile object is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract TelegramFile getFile(String file_id) throws IOException;
+    public TelegramFile getFile(String file_id) throws IOException {
+        String methodName = "getFile";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("file_id", "" + file_id));
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), TelegramFile.class);
+    }
 
     /**
      * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
@@ -578,7 +968,25 @@ public abstract class TelegramBot {
      * @return On success, a File object is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract HTTPFileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException;
+    public HTTPFileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException {
+        TelegramFile tFile = getFile(file_id);
+        String downloadableURL = telegramBotServiceEndPoint + "/file/bot" + botApiToken + "/" + tFile.getFile_path();
+        HTTPFileDownloader hfd;
+        if (downloadToFile == null) {
+            hfd = new HTTPFileDownloader(downloadableURL, "TelegramBotDownloads");
+        } else {
+            hfd = new HTTPFileDownloader(downloadableURL, downloadToFile);
+        }
+        hfd.start();
+        if (waitForCompletion) {
+            try {
+                hfd.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return hfd.getDownloadProgress();
+    }
 
     /**
      * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
@@ -588,7 +996,13 @@ public abstract class TelegramBot {
      * @return On success, a File object is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract File downloadFile(String file_id, File downloadToFile) throws IOException;
+    public File downloadFile(String file_id, File downloadToFile) throws IOException {
+        HTTPFileDownloader.DownloadProgress progress = downloadToFile(file_id, downloadToFile, true);
+        if (progress.getStatus() == HTTPFileDownloader.DownloadStatus.COMPLETED) {
+            return progress.getDownloadedFile();
+        }
+        return null;
+    }
 
     /**
      * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
@@ -597,12 +1011,8 @@ public abstract class TelegramBot {
      * @return On success, a File object is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract File downloadFile(String file_id) throws IOException;
-
-    /**
-     * The types of chat actions available
-     */
-    public enum ChatAction {
-        typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location;
+    public File downloadFile(String file_id) throws IOException {
+        return downloadFile(file_id, null);
     }
+
 }
