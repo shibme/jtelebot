@@ -88,7 +88,7 @@ public class BotService extends TelegramBot {
      *
      * @return basic information about the bot in form of a User object.
      */
-    public synchronized User getIdentity() {
+    public User getIdentity() {
         if (identity == null) {
             try {
                 identity = getMe();
