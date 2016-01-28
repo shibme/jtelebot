@@ -92,7 +92,7 @@ public class BotService extends TelegramBot {
         if (identity == null) {
             try {
                 identity = getMe();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 identity = null;
             }
         }
