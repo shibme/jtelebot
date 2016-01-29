@@ -1,6 +1,6 @@
 package me.shib.java.lib.jtelebot.types;
 
-public abstract class InlineQuery {
+public class InlineQuery {
 
     private String id;
     private User from;
