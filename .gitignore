@@ -5,4 +5,4 @@
 /.settings/
 pom.xml.versionsBackup
 .idea
-jtelebot.iml
+*.iml

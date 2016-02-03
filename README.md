@@ -1,12 +1,12 @@
 # JTeleBot
-A Java library for [Telegram Bot API](https://core.telegram.org/bots/api)
-
-### Build Status
 [![Build Status](https://travis-ci.org/shibme/jtelebot.svg)](https://travis-ci.org/shibme/jtelebot)
+[![Dependency Status](https://www.versioneye.com/user/projects/56adffaa7e03c7003ba414dd/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56adffaa7e03c7003ba414dd)
+[![Download](https://api.bintray.com/packages/shibme/maven/jtelebot/images/download.svg)](https://bintray.com/shibme/maven/jtelebot/_latestVersion)
+
+A Java library for [Telegram Bot API](https://core.telegram.org/bots/api)
 
 ### Maven Dependency for Consumers
 Add to your `pom.xml`
-
 ```xml
 <dependency>
 	<groupId>me.shib.java.lib</groupId>
@@ -17,7 +17,6 @@ Add to your `pom.xml`
 
 ### Example
 Start by creating an instance of the `me.shib.java.lib.jtelebot.TelegramBot` with the API token you get from [@BotFather](https://telegram.me/BotFather)
-
 ```java
 TelegramBot bot = TelegramBot.getInstance("YourBotApiTokenGoesHere");
 Update[] updates;
