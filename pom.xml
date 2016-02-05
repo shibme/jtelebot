@@ -1,11 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.shib.java.lib</groupId>
     <artifactId>jtelebot</artifactId>
-    <version>0.9</version>
+    <version>0.9.1</version>
     <name>JTeleBot</name>
     <description>A Java library for Telegram Bot API</description>
     <url>https://github.com/shibme/jtelebot</url>
@@ -148,7 +148,7 @@
         <dependency>
             <groupId>me.shib.java.lib</groupId>
             <artifactId>rest-client-java</artifactId>
-            <version>0.4</version>
+            <version>0.4.1</version>
         </dependency>
     </dependencies>
 

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Create an instance for this class with your Bot API token. Instances are singleton and for every new API token.
@@ -19,6 +20,7 @@ public class BotService extends TelegramBot {
     private static final String telegramBotServiceEndPoint = "https://api.telegram.org";
 
     private static Map<String, BotService> botMap;
+    private static Logger logger = Logger.getLogger(BotService.class.getName());
 
     private String botApiToken;
     private long updateServiceOffset = 0;
@@ -91,6 +93,7 @@ public class BotService extends TelegramBot {
             try {
                 identity = getMe();
             } catch (Exception e) {
+                logger.throwing(this.getClass().getName(), "getIdentity", e);
                 identity = null;
             }
         }
@@ -568,7 +571,7 @@ public class BotService extends TelegramBot {
             try {
                 hfd.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.throwing(this.getClass().getName(), "downloadToFile", e);
             }
         }
         return hfd.getDownloadProgress();

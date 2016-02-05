@@ -11,7 +11,7 @@ Add to your `pom.xml`
 <dependency>
 	<groupId>me.shib.java.lib</groupId>
 	<artifactId>jtelebot</artifactId>
-	<version>0.9</version>
+	<version>0.9.1</version>
 </dependency>
 ```
 
