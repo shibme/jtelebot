@@ -27,20 +27,27 @@ public class BotService extends TelegramBot {
     private JsonLib jsonLib;
     private BotServiceWrapper botServiceWrapper;
     private User identity;
+    private String endPoint;
 
-    private BotService(String botApiToken) {
+    private BotService(String botApiToken, String endPoint) {
+        if ((endPoint == null) || (endPoint.isEmpty())) {
+            this.endPoint = telegramBotServiceEndPoint;
+        } else {
+            this.endPoint = endPoint;
+        }
         this.botApiToken = botApiToken;
-        jsonLib = new JsonLib();
-        botServiceWrapper = new BotServiceWrapper(telegramBotServiceEndPoint + "/" + "bot" + botApiToken, jsonLib);
+        this.jsonLib = new JsonLib();
+        this.botServiceWrapper = new BotServiceWrapper(this.endPoint + "/" + "bot" + botApiToken, jsonLib);
     }
 
     /**
      * Creates a singleton object for the given bot API token. For every unique API token, a singleton object is created.
      *
      * @param botApiToken the API token that is given by @BotFather bot
+     * @param endPoint    the endpoint to call the Bot API service. Might be used in case of proxy services.
      * @return A singleton instance of the bot for the given API token. Returns null if the token is invalid.
      */
-    public static synchronized BotService getInstance(String botApiToken) {
+    public static synchronized BotService getInstance(String botApiToken, String endPoint) {
         if ((botApiToken == null) || (botApiToken.isEmpty())) {
             return null;
         }
@@ -49,7 +56,7 @@ public class BotService extends TelegramBot {
         }
         BotService bot = botMap.get(botApiToken);
         if (bot == null) {
-            bot = new BotService(botApiToken);
+            bot = new BotService(botApiToken, endPoint);
             if (bot.getIdentity() != null) {
                 botMap.put(botApiToken, bot);
             } else {
@@ -559,7 +566,7 @@ public class BotService extends TelegramBot {
      */
     public HTTPFileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException {
         TelegramFile tFile = getFile(file_id);
-        String downloadableURL = telegramBotServiceEndPoint + "/file/bot" + botApiToken + "/" + tFile.getFile_path();
+        String downloadableURL = endPoint + "/file/bot" + botApiToken + "/" + tFile.getFile_path();
         HTTPFileDownloader hfd;
         if (downloadToFile == null) {
             hfd = new HTTPFileDownloader(downloadableURL, "TelegramBotDownloads");

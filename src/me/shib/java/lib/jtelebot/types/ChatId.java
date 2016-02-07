@@ -2,8 +2,7 @@ package me.shib.java.lib.jtelebot.types;
 
 public class ChatId {
 
-    private String chat_id_channel;
-    private long chat_id;
+    private String chat_id;
 
     /**
      * Initialize a new ChatId with the username of the target channel (in the format @channelusername)
@@ -11,8 +10,7 @@ public class ChatId {
      * @param chat_id username of the target channel (in the format @channelusername)
      */
     public ChatId(String chat_id) {
-        this.chat_id_channel = chat_id;
-        this.chat_id = 0;
+        this.chat_id = chat_id;
     }
 
     /**
@@ -21,22 +19,21 @@ public class ChatId {
      * @param chat_id Unique identifier of the target chat
      */
     public ChatId(long chat_id) {
-        this.chat_id = chat_id;
+        this.chat_id = chat_id + "";
     }
 
+    /**
+     * Returns the chat_id as string
+     *
+     * @return the chat id as a string
+     */
     public String getChatId() {
-        if (chat_id_channel == null) {
-            return chat_id + "";
-        }
-        return chat_id_channel;
+        return this.chat_id;
     }
 
     @Override
     public String toString() {
-        if (chat_id_channel == null) {
-            return "ChatId [chat_id=" + chat_id + "]";
-        }
-        return "ChatId [chat_id=" + chat_id_channel + "]";
+        return "ChatId [chat_id=" + chat_id + "]";
     }
 
 }

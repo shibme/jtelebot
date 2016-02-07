@@ -15,10 +15,21 @@ public abstract class TelegramBot {
      * Creates a singleton object for the given bot API token. For every unique API token, a singleton object is created.
      *
      * @param botApiToken the API token that is given by @BotFather bot
+     * @param endPoint    the endpoint to call the Bot API service. Might be used in case of proxy services.
+     * @return A singleton instance of the bot for the given API token. Returns null if the token is invalid.
+     */
+    public static synchronized BotService getInstance(String botApiToken, String endPoint) {
+        return BotService.getInstance(botApiToken, endPoint);
+    }
+
+    /**
+     * Creates a singleton object for the given bot API token. For every unique API token, a singleton object is created.
+     *
+     * @param botApiToken the API token that is given by @BotFather bot
      * @return A singleton instance of the bot for the given API token. Returns null if the token is invalid.
      */
     public static synchronized TelegramBot getInstance(String botApiToken) {
-        return BotService.getInstance(botApiToken);
+        return getInstance(botApiToken, null);
     }
 
     /**
@@ -672,6 +683,6 @@ public abstract class TelegramBot {
      * The types of chat actions available
      */
     public enum ChatAction {
-        typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location;
+        typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location
     }
 }
