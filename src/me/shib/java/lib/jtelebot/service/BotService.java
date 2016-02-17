@@ -19,15 +19,15 @@ public class BotService extends TelegramBot {
 
     private static final String telegramBotServiceEndPoint = "https://api.telegram.org";
 
-    private static Map<String, BotService> botMap;
+    private static Map<String, BotService> botMap = new HashMap<>();
     private static Logger logger = Logger.getLogger(BotService.class.getName());
 
     private String botApiToken;
-    private long updateServiceOffset = 0;
     private JsonLib jsonLib;
     private BotServiceWrapper botServiceWrapper;
     private User identity;
     private String endPoint;
+    private BotUpdateService botUpdateService;
 
     private BotService(String botApiToken, String endPoint) {
         if ((endPoint == null) || (endPoint.isEmpty())) {
@@ -38,21 +38,29 @@ public class BotService extends TelegramBot {
         this.botApiToken = botApiToken;
         this.jsonLib = new JsonLib();
         this.botServiceWrapper = new BotServiceWrapper(this.endPoint + "/" + "bot" + botApiToken, jsonLib);
+        this.botUpdateService = BotUpdateService.getInstance(this.botApiToken, this.endPoint);
+    }
+
+    /**
+     * Creates an object for the given bot API token. For every unique API token, a singleton update receiver is created
+     * is created to avoid duplicate update reception throughout the JVM.
+     *
+     * @param botApiToken the API token that is given by @BotFather bot
+     */
+    public BotService(String botApiToken) {
+        this(botApiToken, null);
     }
 
     /**
      * Creates a singleton object for the given bot API token. For every unique API token, a singleton object is created.
      *
      * @param botApiToken the API token that is given by @BotFather bot
-     * @param endPoint    the endpoint to call the Bot API service. Might be used in case of proxy services.
+     * @param endPoint    the endpoint to call the Bot API service. Might be used in case of proxy services
      * @return A singleton instance of the bot for the given API token. Returns null if the token is invalid.
      */
     public static synchronized BotService getInstance(String botApiToken, String endPoint) {
         if ((botApiToken == null) || (botApiToken.isEmpty())) {
             return null;
-        }
-        if (botMap == null) {
-            botMap = new HashMap<>();
         }
         BotService bot = botMap.get(botApiToken);
         if (bot == null) {
@@ -503,22 +511,7 @@ public class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public synchronized Update[] getUpdates(int timeout, int limit, long offset) throws IOException {
-        String methodName = "getUpdates";
-        ArrayList<Parameter> params = new ArrayList<>();
-        if (offset > 0) {
-            params.add(new Parameter("offset", "" + offset));
-        }
-        if ((limit > 0) && (limit <= 100)) {
-            params.add(new Parameter("limit", "" + limit));
-        }
-        if (timeout > 0) {
-            params.add(new Parameter("timeout", "" + timeout));
-        }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
-        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
-            return new Update[0];
-        }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Update[].class);
+        return botUpdateService.getUpdates(timeout, limit, offset);
     }
 
     /**
@@ -530,11 +523,7 @@ public class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public synchronized Update[] getUpdates(int timeout, int limit) throws IOException {
-        Update[] updates = getUpdates(timeout, limit, updateServiceOffset);
-        if (updates.length > 0) {
-            updateServiceOffset = updates[updates.length - 1].getUpdate_id() + 1;
-        }
-        return updates;
+        return botUpdateService.getUpdates(timeout, limit);
     }
 
     /**
