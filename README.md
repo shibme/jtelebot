@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/shibme/jtelebot.svg)](https://travis-ci.org/shibme/jtelebot)
 [![Dependency Status](https://www.versioneye.com/user/projects/56adffaa7e03c7003ba414dd/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56adffaa7e03c7003ba414dd)
 [![Download](https://api.bintray.com/packages/shibme/maven/jtelebot/images/download.svg)](https://bintray.com/shibme/maven/jtelebot/_latestVersion)
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/shibme/jtelebot.svg)](http://isitmaintained.com/project/shibme/jtelebot "Percentage of issues still open")
 
 A Java library for [Telegram Bot API](https://core.telegram.org/bots/api)
 

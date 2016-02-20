@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BotUpdateService {
+public final class BotUpdateService {
 
     private static Map<String, BotUpdateService> botUpdateServiceMap = new HashMap<>();
 

@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 /**
  * Create an instance for this class with your Bot API token. Instances are singleton and for every new API token.
  */
-public class BotService extends TelegramBot {
+public final class BotService extends TelegramBot {
 
     private static final String telegramBotServiceEndPoint = "https://api.telegram.org";
 

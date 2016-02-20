@@ -8,7 +8,7 @@ import me.shib.java.lib.rest.client.ServiceResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class BotServiceWrapper {
+public final class BotServiceWrapper {
 
     private ServiceAdapter serviceAdapter;
     private JsonLib jsonLib;
