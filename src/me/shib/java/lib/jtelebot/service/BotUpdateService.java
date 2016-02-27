@@ -19,7 +19,7 @@ public final class BotUpdateService {
 
     private BotUpdateService(String botApiToken, String endPoint) {
         this.jsonLib = new JsonLib();
-        this.botServiceWrapper = new BotServiceWrapper(endPoint + "/" + "bot" + botApiToken, jsonLib);
+        this.botServiceWrapper = new BotServiceWrapper(endPoint + "/bot" + botApiToken, jsonLib);
         this.updateServiceOffset = 0;
     }
 
@@ -34,10 +34,10 @@ public final class BotUpdateService {
         if ((botApiToken == null) || (botApiToken.isEmpty())) {
             return null;
         }
-        BotUpdateService botUpdateService = botUpdateServiceMap.get(botApiToken);
+        BotUpdateService botUpdateService = botUpdateServiceMap.get(endPoint + "/bot" + botApiToken);
         if (botUpdateService == null) {
             botUpdateService = new BotUpdateService(botApiToken, endPoint);
-            botUpdateServiceMap.put(botApiToken, botUpdateService);
+            botUpdateServiceMap.put(endPoint + "/bot" + botApiToken, botUpdateService);
         }
         return botUpdateService;
     }

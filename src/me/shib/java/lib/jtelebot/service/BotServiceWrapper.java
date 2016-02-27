@@ -31,8 +31,7 @@ public final class BotServiceWrapper {
         if (serviceResponse.getStatusCode() != 200) {
             return null;
         }
-        BotServiceResponse response = jsonLib.fromJson(serviceResponse.getResponse(), BotServiceResponse.class);
-        return response;
+        return jsonLib.fromJson(serviceResponse.getResponse(), BotServiceResponse.class);
     }
 
     public class BotServiceResponse {

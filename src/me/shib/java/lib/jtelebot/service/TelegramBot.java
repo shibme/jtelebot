@@ -5,27 +5,46 @@ import me.shib.java.lib.rest.client.HTTPFileDownloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class TelegramBot {
 
+    private static final String telegramBotServiceEndPoint = "https://api.telegram.org";
     private static final int defaultLongPollInterval = 300;
     private static final int defaultUpdateListLength = 100;
+    private static final Map<String, TelegramBot> botMap = new HashMap<>();
 
     /**
      * Creates a singleton object for the given bot API token. For every unique API token, a singleton object is created.
      *
-     * @param botApiToken the API token that is given by @BotFather bot
-     * @param endPoint    the endpoint to call the Bot API service. Might be used in case of proxy services.
+     * @param botApiToken the API token for the bot
+     * @param endPoint    the endpoint to call the Bot API service. Might be used in case of proxy services
      * @return A singleton instance of the bot for the given API token. Returns null if the token is invalid.
      */
-    public static synchronized BotService getInstance(String botApiToken, String endPoint) {
-        return BotService.getInstance(botApiToken, endPoint);
+    public static synchronized TelegramBot getInstance(String botApiToken, String endPoint) {
+        if ((botApiToken == null) || (botApiToken.isEmpty())) {
+            return null;
+        }
+        if ((endPoint == null) || (endPoint.isEmpty())) {
+            endPoint = telegramBotServiceEndPoint;
+        }
+        TelegramBot bot = botMap.get(endPoint + "/bot" + botApiToken);
+        if (bot == null) {
+            bot = new BotService(botApiToken, endPoint);
+            if (bot.getIdentity() != null) {
+                botMap.put(endPoint + "/bot" + botApiToken, bot);
+            } else {
+                bot = null;
+            }
+        }
+        return bot;
     }
 
     /**
      * Creates a singleton object for the given bot API token. For every unique API token, a singleton object is created.
      *
-     * @param botApiToken the API token that is given by @BotFather bot
+     * @param botApiToken the API token for the bot
      * @return A singleton instance of the bot for the given API token. Returns null if the token is invalid.
      */
     public static synchronized TelegramBot getInstance(String botApiToken) {

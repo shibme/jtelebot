@@ -8,8 +8,6 @@ import me.shib.java.lib.rest.client.Parameter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -18,8 +16,6 @@ import java.util.logging.Logger;
 public final class BotService extends TelegramBot {
 
     private static final String telegramBotServiceEndPoint = "https://api.telegram.org";
-
-    private static Map<String, BotService> botMap = new HashMap<>();
     private static Logger logger = Logger.getLogger(BotService.class.getName());
 
     private String botApiToken;
@@ -29,7 +25,15 @@ public final class BotService extends TelegramBot {
     private String endPoint;
     private BotUpdateService botUpdateService;
 
-    private BotService(String botApiToken, String endPoint) {
+
+    /**
+     * Creates an object for the given bot API token. For every unique API token, a singleton update receiver is created
+     * is created to avoid duplicate update reception throughout the JVM.
+     *
+     * @param botApiToken the API token that is given by @BotFather bot
+     * @param endPoint    the endpoint to call the Bot API service. Might be used in case of proxy services
+     */
+    public BotService(String botApiToken, String endPoint) {
         if ((endPoint == null) || (endPoint.isEmpty())) {
             this.endPoint = telegramBotServiceEndPoint;
         } else {
@@ -37,7 +41,7 @@ public final class BotService extends TelegramBot {
         }
         this.botApiToken = botApiToken;
         this.jsonLib = new JsonLib();
-        this.botServiceWrapper = new BotServiceWrapper(this.endPoint + "/" + "bot" + botApiToken, jsonLib);
+        this.botServiceWrapper = new BotServiceWrapper(this.endPoint + "/bot" + botApiToken, jsonLib);
         this.botUpdateService = BotUpdateService.getInstance(this.botApiToken, this.endPoint);
     }
 
@@ -49,29 +53,6 @@ public final class BotService extends TelegramBot {
      */
     public BotService(String botApiToken) {
         this(botApiToken, null);
-    }
-
-    /**
-     * Creates a singleton object for the given bot API token. For every unique API token, a singleton object is created.
-     *
-     * @param botApiToken the API token that is given by @BotFather bot
-     * @param endPoint    the endpoint to call the Bot API service. Might be used in case of proxy services
-     * @return A singleton instance of the bot for the given API token. Returns null if the token is invalid.
-     */
-    public static synchronized BotService getInstance(String botApiToken, String endPoint) {
-        if ((botApiToken == null) || (botApiToken.isEmpty())) {
-            return null;
-        }
-        BotService bot = botMap.get(botApiToken);
-        if (bot == null) {
-            bot = new BotService(botApiToken, endPoint);
-            if (bot.getIdentity() != null) {
-                botMap.put(botApiToken, bot);
-            } else {
-                bot = null;
-            }
-        }
-        return bot;
     }
 
     /**
