@@ -787,7 +787,11 @@ public abstract class TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Update[] getUpdates() throws IOException {
-        return getUpdates(defaultLongPollInterval);
+        Update[] updates = null;
+        while ((updates == null) || (updates.length == 0)) {
+            updates = getUpdates(defaultLongPollInterval);
+        }
+        return updates;
     }
 
     /**
