@@ -1,6 +1,9 @@
 package me.shib.java.lib.jtelebot.service;
 
-import me.shib.java.lib.jtelebot.types.*;
+import me.shib.java.lib.jtelebot.models.inline.InlineQueryResult;
+import me.shib.java.lib.jtelebot.models.types.*;
+import me.shib.java.lib.jtelebot.models.updates.Message;
+import me.shib.java.lib.jtelebot.models.updates.Update;
 import me.shib.java.lib.rest.client.HTTPFileDownloader;
 
 import java.io.File;
@@ -78,7 +81,21 @@ public abstract class TelegramBot {
      *
      * @param chat_id                  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param text                     Text of the message to be sent
+     * @param parse_mode               Send Markdown, if you want Telegram apps to show bold, italic and inline URLs in your bot's message.
+     * @param disable_web_page_preview Disables link previews for links in this message
+     * @param reply_to_message_id      If the message is a reply, ID of the original message
+     * @param reply_markup             Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @param disable_notification     Sends the message silently
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException;
+
+    /**
+     * Use this method to send text messages.
+     *
+     * @param chat_id                  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param text                     Text of the message to be sent
      * @param parse_mode               Send Markdown, if you want Telegram apps to show bold, italic and inline URLs in your bot's message.
      * @param disable_web_page_preview Disables link previews for links in this message
      * @param reply_to_message_id      If the message is a reply, ID of the original message
@@ -86,22 +103,23 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendMessage(ChatId chat_id, String text, boolean disable_notification, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendMessage(chat_id, text, parse_mode, disable_web_page_preview, reply_to_message_id, reply_markup, false);
+    }
 
     /**
      * Use this method to send text messages.
      *
      * @param chat_id                  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param text                     Text of the message to be sent
-     * @param disable_notification     Sends the message silently
      * @param parse_mode               Send Markdown, if you want Telegram apps to show bold, italic and inline URLs in your bot's message.
      * @param disable_web_page_preview Disables link previews for links in this message
      * @param reply_to_message_id      If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendMessage(ChatId chat_id, String text, boolean disable_notification, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id) throws IOException {
-        return sendMessage(chat_id, text, disable_notification, parse_mode, disable_web_page_preview, reply_to_message_id, null);
+    public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id) throws IOException {
+        return sendMessage(chat_id, text, parse_mode, disable_web_page_preview, reply_to_message_id, null);
     }
 
     /**
@@ -109,41 +127,26 @@ public abstract class TelegramBot {
      *
      * @param chat_id                  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param text                     Text of the message to be sent
-     * @param disable_notification     Sends the message silently
      * @param parse_mode               Send Markdown, if you want Telegram apps to show bold, italic and inline URLs in your bot's message.
      * @param disable_web_page_preview Disables link previews for links in this message
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendMessage(ChatId chat_id, String text, boolean disable_notification, ParseMode parse_mode, boolean disable_web_page_preview) throws IOException {
-        return sendMessage(chat_id, text, disable_notification, parse_mode, disable_web_page_preview, 0);
+    public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview) throws IOException {
+        return sendMessage(chat_id, text, parse_mode, disable_web_page_preview, 0);
     }
 
     /**
      * Use this method to send text messages.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param text                 Text of the message to be sent
-     * @param disable_notification Sends the message silently
-     * @param parse_mode           Send Markdown, if you want Telegram apps to show bold, italic and inline URLs in your bot's message.
+     * @param chat_id    Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param text       Text of the message to be sent
+     * @param parse_mode Send Markdown, if you want Telegram apps to show bold, italic and inline URLs in your bot's message.
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendMessage(ChatId chat_id, String text, boolean disable_notification, ParseMode parse_mode) throws IOException {
-        return sendMessage(chat_id, text, disable_notification, parse_mode, false);
-    }
-
-    /**
-     * Use this method to send text messages.
-     *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param text                 Text of the message to be sent
-     * @param disable_notification Sends the message silently
-     * @return On success, the sent Message is returned.
-     * @throws IOException an exception is thrown in case of any service call failures
-     */
-    public Message sendMessage(ChatId chat_id, String text, boolean disable_notification) throws IOException {
-        return sendMessage(chat_id, text, disable_notification, null);
+    public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode) throws IOException {
+        return sendMessage(chat_id, text, parse_mode, false);
     }
 
     /**
@@ -155,7 +158,7 @@ public abstract class TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendMessage(ChatId chat_id, String text) throws IOException {
-        return sendMessage(chat_id, text, false);
+        return sendMessage(chat_id, text, null);
     }
 
     /**
@@ -188,55 +191,55 @@ public abstract class TelegramBot {
      *
      * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param photo                Photo to send. You can either pass a file_id as String to resend a photo that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
      * @param caption              Photo caption (may also be used when resending photos by file_id).
      * @param reply_to_message_id  If the message is a reply, ID of the original message
      * @param reply_markup         Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param disable_notification Sends the message silently
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendPhoto(ChatId chat_id, TelegramFile photo, boolean disable_notification, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public abstract Message sendPhoto(ChatId chat_id, InputFile photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException;
 
     /**
      * Use this method to send photos.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param photo                Photo to send. You can either pass a file_id as String to resend a photo that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param caption              Photo caption (may also be used when resending photos by file_id).
-     * @param reply_to_message_id  If the message is a reply, ID of the original message
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param photo               Photo to send. You can either pass a file_id as String to resend a photo that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param caption             Photo caption (may also be used when resending photos by file_id).
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendPhoto(ChatId chat_id, TelegramFile photo, boolean disable_notification, String caption, long reply_to_message_id) throws IOException {
-        return sendPhoto(chat_id, photo, disable_notification, caption, reply_to_message_id, null);
+    public Message sendPhoto(ChatId chat_id, InputFile photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendPhoto(chat_id, photo, caption, reply_to_message_id, reply_markup, false);
     }
 
     /**
      * Use this method to send photos.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param photo                Photo to send. You can either pass a file_id as String to resend a photo that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param caption              Photo caption (may also be used when resending photos by file_id).
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param photo               Photo to send. You can either pass a file_id as String to resend a photo that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param caption             Photo caption (may also be used when resending photos by file_id).
+     * @param reply_to_message_id If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendPhoto(ChatId chat_id, TelegramFile photo, boolean disable_notification, String caption) throws IOException {
-        return sendPhoto(chat_id, photo, disable_notification, caption, 0);
+    public Message sendPhoto(ChatId chat_id, InputFile photo, String caption, long reply_to_message_id) throws IOException {
+        return sendPhoto(chat_id, photo, caption, reply_to_message_id, null);
     }
 
     /**
      * Use this method to send photos.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param photo                Photo to send. You can either pass a file_id as String to resend a photo that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
+     * @param chat_id Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param photo   Photo to send. You can either pass a file_id as String to resend a photo that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param caption Photo caption (may also be used when resending photos by file_id).
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendPhoto(ChatId chat_id, TelegramFile photo, boolean disable_notification) throws IOException {
-        return sendPhoto(chat_id, photo, disable_notification, null);
+    public Message sendPhoto(ChatId chat_id, InputFile photo, String caption) throws IOException {
+        return sendPhoto(chat_id, photo, caption, 0);
     }
 
     /**
@@ -247,8 +250,8 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendPhoto(ChatId chat_id, TelegramFile photo) throws IOException {
-        return sendPhoto(chat_id, photo, false);
+    public Message sendPhoto(ChatId chat_id, InputFile photo) throws IOException {
+        return sendPhoto(chat_id, photo, null);
     }
 
     /**
@@ -256,75 +259,90 @@ public abstract class TelegramBot {
      *
      * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param audio                Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
      * @param duration             Duration of the audio in seconds
      * @param performer            Performer
      * @param title                Track name
      * @param reply_to_message_id  If the message is a reply, ID of the original message
      * @param reply_markup         Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param disable_notification Sends the message silently
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendAudio(ChatId chat_id, TelegramFile audio, boolean disable_notification, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public abstract Message sendAudio(ChatId chat_id, InputFile audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException;
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param audio                Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param duration             Duration of the audio in seconds
-     * @param performer            Performer
-     * @param title                Track name
-     * @param reply_to_message_id  If the message is a reply, ID of the original message
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param audio               Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration            Duration of the audio in seconds
+     * @param performer           Performer
+     * @param title               Track name
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendAudio(ChatId chat_id, TelegramFile audio, boolean disable_notification, int duration, String performer, String title, long reply_to_message_id) throws IOException {
-        return sendAudio(chat_id, audio, disable_notification, duration, performer, title, reply_to_message_id, null);
+    public Message sendAudio(ChatId chat_id, InputFile audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendAudio(chat_id, audio, duration, performer, title, reply_to_message_id, reply_markup, false);
     }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param audio                Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param duration             Duration of the audio in seconds
-     * @param performer            Performer
-     * @param title                Track name
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param audio               Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration            Duration of the audio in seconds
+     * @param performer           Performer
+     * @param title               Track name
+     * @param reply_to_message_id If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendAudio(ChatId chat_id, TelegramFile audio, boolean disable_notification, int duration, String performer, String title) throws IOException {
-        return sendAudio(chat_id, audio, disable_notification, duration, performer, title, 0);
+    public Message sendAudio(ChatId chat_id, InputFile audio, int duration, String performer, String title, long reply_to_message_id) throws IOException {
+        return sendAudio(chat_id, audio, duration, performer, title, reply_to_message_id, null);
     }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param audio                Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param duration             Duration of the audio in seconds
+     * @param chat_id   Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param audio     Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration  Duration of the audio in seconds
+     * @param performer Performer
+     * @param title     Track name
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendAudio(ChatId chat_id, TelegramFile audio, boolean disable_notification, int duration) throws IOException {
-        return sendAudio(chat_id, audio, disable_notification, duration, null, null);
+    public Message sendAudio(ChatId chat_id, InputFile audio, int duration, String performer, String title) throws IOException {
+        return sendAudio(chat_id, audio, duration, performer, title, 0);
     }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param audio                Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
+     * @param chat_id   Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param audio     Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration  Duration of the audio in seconds
+     * @param performer Performer
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendAudio(ChatId chat_id, TelegramFile audio, boolean disable_notification) throws IOException {
-        return sendAudio(chat_id, audio, disable_notification, 0);
+    public Message sendAudio(ChatId chat_id, InputFile audio, int duration, String performer) throws IOException {
+        return sendAudio(chat_id, audio, duration, performer, null);
+    }
+
+    /**
+     * Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
+     *
+     * @param chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param audio    Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration Duration of the audio in seconds
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public Message sendAudio(ChatId chat_id, InputFile audio, int duration) throws IOException {
+        return sendAudio(chat_id, audio, duration, null);
     }
 
     /**
@@ -335,8 +353,8 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendAudio(ChatId chat_id, TelegramFile audio) throws IOException {
-        return sendAudio(chat_id, audio, false);
+    public Message sendAudio(ChatId chat_id, InputFile audio) throws IOException {
+        return sendAudio(chat_id, audio, 0);
     }
 
     /**
@@ -344,39 +362,55 @@ public abstract class TelegramBot {
      *
      * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param document             File to send. You can either pass a file_id as String to resend a file that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
+     * @param caption              Document caption (may also be used when resending documents by file_id), 0-200 characters
      * @param reply_to_message_id  If the message is a reply, ID of the original message
      * @param reply_markup         Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param disable_notification Sends the message silently
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendDocument(ChatId chat_id, TelegramFile document, boolean disable_notification, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public abstract Message sendDocument(ChatId chat_id, InputFile document, String caption, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException;
 
     /**
      * Use this method to send general files. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param document             File to send. You can either pass a file_id as String to resend a file that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param reply_to_message_id  If the message is a reply, ID of the original message
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param document            File to send. You can either pass a file_id as String to resend a file that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param caption             Document caption (may also be used when resending documents by file_id), 0-200 characters
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendDocument(ChatId chat_id, TelegramFile document, boolean disable_notification, long reply_to_message_id) throws IOException {
-        return sendDocument(chat_id, document, disable_notification, reply_to_message_id, null);
+    public Message sendDocument(ChatId chat_id, InputFile document, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendDocument(chat_id, document, caption, reply_to_message_id, reply_markup, false);
     }
 
     /**
      * Use this method to send general files. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param document             File to send. You can either pass a file_id as String to resend a file that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param document            File to send. You can either pass a file_id as String to resend a file that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param caption             Document caption (may also be used when resending documents by file_id), 0-200 characters
+     * @param reply_to_message_id If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendDocument(ChatId chat_id, TelegramFile document, boolean disable_notification) throws IOException {
-        return sendDocument(chat_id, document, disable_notification, 0);
+    public Message sendDocument(ChatId chat_id, InputFile document, String caption, long reply_to_message_id) throws IOException {
+        return sendDocument(chat_id, document, caption, reply_to_message_id, null);
+    }
+
+    /**
+     * Use this method to send general files. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
+     *
+     * @param chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param document File to send. You can either pass a file_id as String to resend a file that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param caption  Document caption (may also be used when resending documents by file_id), 0-200 characters
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public Message sendDocument(ChatId chat_id, InputFile document, String caption) throws IOException {
+        return sendDocument(chat_id, document, caption, 0);
     }
 
     /**
@@ -387,8 +421,8 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendDocument(ChatId chat_id, TelegramFile document) throws IOException {
-        return sendDocument(chat_id, document, false);
+    public Message sendDocument(ChatId chat_id, InputFile document) throws IOException {
+        return sendDocument(chat_id, document, null);
     }
 
     /**
@@ -396,39 +430,39 @@ public abstract class TelegramBot {
      *
      * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param sticker              Sticker to send. You can either pass a file_id as String to resend a sticker that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
      * @param reply_to_message_id  If the message is a reply, ID of the original message
      * @param reply_markup         Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param disable_notification Sends the message silently
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendSticker(ChatId chat_id, TelegramFile sticker, boolean disable_notification, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public abstract Message sendSticker(ChatId chat_id, InputFile sticker, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException;
 
     /**
      * Use this method to send .webp stickers.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param sticker              Sticker to send. You can either pass a file_id as String to resend a sticker that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param reply_to_message_id  If the message is a reply, ID of the original message
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param sticker             Sticker to send. You can either pass a file_id as String to resend a sticker that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendSticker(ChatId chat_id, TelegramFile sticker, boolean disable_notification, long reply_to_message_id) throws IOException {
-        return sendSticker(chat_id, sticker, disable_notification, reply_to_message_id, null);
+    public Message sendSticker(ChatId chat_id, InputFile sticker, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendSticker(chat_id, sticker, reply_to_message_id, reply_markup, false);
     }
 
     /**
      * Use this method to send .webp stickers.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param sticker              Sticker to send. You can either pass a file_id as String to resend a sticker that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param sticker             Sticker to send. You can either pass a file_id as String to resend a sticker that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param reply_to_message_id If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendSticker(ChatId chat_id, TelegramFile sticker, boolean disable_notification) throws IOException {
-        return sendSticker(chat_id, sticker, disable_notification, 0);
+    public Message sendSticker(ChatId chat_id, InputFile sticker, long reply_to_message_id) throws IOException {
+        return sendSticker(chat_id, sticker, reply_to_message_id, null);
     }
 
     /**
@@ -439,8 +473,8 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendSticker(ChatId chat_id, TelegramFile sticker) throws IOException {
-        return sendSticker(chat_id, sticker, false);
+    public Message sendSticker(ChatId chat_id, InputFile sticker) throws IOException {
+        return sendSticker(chat_id, sticker, 0);
     }
 
     /**
@@ -448,72 +482,92 @@ public abstract class TelegramBot {
      *
      * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param video                Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
      * @param duration             Duration of sent video in seconds
      * @param caption              Video caption (may also be used when resending videos by file_id).
      * @param reply_to_message_id  If the message is a reply, ID of the original message
      * @param reply_markup         Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param width                Video width
+     * @param height               Video height
+     * @param disable_notification Sends the message silently
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVideo(ChatId chat_id, TelegramFile video, boolean disable_notification, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public abstract Message sendVideo(ChatId chat_id, InputFile video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup, int width, int height, boolean disable_notification) throws IOException;
 
     /**
      * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param video                Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param duration             Duration of sent video in seconds
-     * @param caption              Video caption (may also be used when resending videos by file_id).
-     * @param reply_to_message_id  If the message is a reply, ID of the original message
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param video               Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration            Duration of sent video in seconds
+     * @param caption             Video caption (may also be used when resending videos by file_id).
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param width               Video width
+     * @param height              Video height
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVideo(ChatId chat_id, TelegramFile video, boolean disable_notification, int duration, String caption, long reply_to_message_id) throws IOException {
-        return sendVideo(chat_id, video, disable_notification, duration, caption, reply_to_message_id, null);
+    public Message sendVideo(ChatId chat_id, InputFile video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup, int width, int height) throws IOException {
+        return sendVideo(chat_id, video, duration, caption, reply_to_message_id, reply_markup, width, height, false);
     }
 
     /**
      * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param video                Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param duration             Duration of sent video in seconds
-     * @param caption              Video caption (may also be used when resending videos by file_id).
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param video               Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration            Duration of sent video in seconds
+     * @param caption             Video caption (may also be used when resending videos by file_id).
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVideo(ChatId chat_id, TelegramFile video, boolean disable_notification, int duration, String caption) throws IOException {
-        return sendVideo(chat_id, video, disable_notification, duration, caption, 0);
+    public Message sendVideo(ChatId chat_id, InputFile video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendVideo(chat_id, video, duration, caption, reply_to_message_id, reply_markup, 0, 0);
     }
 
     /**
      * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param video                Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param duration             Duration of sent video in seconds
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param video               Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration            Duration of sent video in seconds
+     * @param caption             Video caption (may also be used when resending videos by file_id).
+     * @param reply_to_message_id If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVideo(ChatId chat_id, TelegramFile video, boolean disable_notification, int duration) throws IOException {
-        return sendVideo(chat_id, video, disable_notification, duration, null);
+    public Message sendVideo(ChatId chat_id, InputFile video, int duration, String caption, long reply_to_message_id) throws IOException {
+        return sendVideo(chat_id, video, duration, caption, reply_to_message_id, null);
     }
 
     /**
      * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param video                Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
+     * @param chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param video    Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration Duration of sent video in seconds
+     * @param caption  Video caption (may also be used when resending videos by file_id).
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVideo(ChatId chat_id, TelegramFile video, boolean disable_notification) throws IOException {
-        return sendVideo(chat_id, video, disable_notification, 0);
+    public Message sendVideo(ChatId chat_id, InputFile video, int duration, String caption) throws IOException {
+        return sendVideo(chat_id, video, duration, caption, 0);
+    }
+
+    /**
+     * Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
+     *
+     * @param chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param video    Video to send. You can either pass a file_id as String to resend a video that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration Duration of sent video in seconds
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public Message sendVideo(ChatId chat_id, InputFile video, int duration) throws IOException {
+        return sendVideo(chat_id, video, duration, null);
     }
 
     /**
@@ -524,8 +578,8 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVideo(ChatId chat_id, TelegramFile video) throws IOException {
-        return sendVideo(chat_id, video, false);
+    public Message sendVideo(ChatId chat_id, InputFile video) throws IOException {
+        return sendVideo(chat_id, video, 0);
     }
 
     /**
@@ -533,55 +587,55 @@ public abstract class TelegramBot {
      *
      * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param voice                Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
      * @param duration             Duration of sent audio in seconds
      * @param reply_to_message_id  If the message is a reply, ID of the original message
      * @param reply_markup         Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param disable_notification Sends the message silently
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendVoice(ChatId chat_id, TelegramFile voice, boolean disable_notification, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public abstract Message sendVoice(ChatId chat_id, InputFile voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException;
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param voice                Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param duration             Duration of sent audio in seconds
-     * @param reply_to_message_id  If the message is a reply, ID of the original message
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param voice               Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration            Duration of sent audio in seconds
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVoice(ChatId chat_id, TelegramFile voice, boolean disable_notification, int duration, long reply_to_message_id) throws IOException {
-        return sendVoice(chat_id, voice, disable_notification, duration, reply_to_message_id, null);
+    public Message sendVoice(ChatId chat_id, InputFile voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendVoice(chat_id, voice, duration, reply_to_message_id, reply_markup, false);
     }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param voice                Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
-     * @param duration             Duration of sent audio in seconds
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param voice               Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration            Duration of sent audio in seconds
+     * @param reply_to_message_id If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVoice(ChatId chat_id, TelegramFile voice, boolean disable_notification, int duration) throws IOException {
-        return sendVoice(chat_id, voice, disable_notification, duration, 0);
+    public Message sendVoice(ChatId chat_id, InputFile voice, int duration, long reply_to_message_id) throws IOException {
+        return sendVoice(chat_id, voice, duration, reply_to_message_id, null);
     }
 
     /**
      * Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param voice                Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
-     * @param disable_notification Sends the message silently
+     * @param chat_id  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param voice    Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new file by passing a File object.
+     * @param duration Duration of sent audio in seconds
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVoice(ChatId chat_id, TelegramFile voice, boolean disable_notification) throws IOException {
-        return sendVoice(chat_id, voice, disable_notification, 0);
+    public Message sendVoice(ChatId chat_id, InputFile voice, int duration) throws IOException {
+        return sendVoice(chat_id, voice, duration, 0);
     }
 
     /**
@@ -592,8 +646,8 @@ public abstract class TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVoice(ChatId chat_id, TelegramFile voice) throws IOException {
-        return sendVoice(chat_id, voice, false);
+    public Message sendVoice(ChatId chat_id, InputFile voice) throws IOException {
+        return sendVoice(chat_id, voice, 0);
     }
 
     /**
@@ -602,41 +656,41 @@ public abstract class TelegramBot {
      * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param latitude             Latitude of location
      * @param longitude            Longitude of location
-     * @param disable_notification Sends the message silently
      * @param reply_to_message_id  If the message is a reply, ID of the original message
      * @param reply_markup         Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param disable_notification Sends the message silently
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract Message sendLocation(ChatId chat_id, float latitude, float longitude, boolean disable_notification, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException;
+    public abstract Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException;
 
     /**
      * Use this method to send point on the map.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param latitude             Latitude of location
-     * @param longitude            Longitude of location
-     * @param disable_notification Sends the message silently
-     * @param reply_to_message_id  If the message is a reply, ID of the original message
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude            Latitude of location
+     * @param longitude           Longitude of location
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendLocation(ChatId chat_id, float latitude, float longitude, boolean disable_notification, long reply_to_message_id) throws IOException {
-        return sendLocation(chat_id, latitude, longitude, disable_notification, reply_to_message_id, null);
+    public Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendLocation(chat_id, latitude, longitude, reply_to_message_id, reply_markup, false);
     }
 
     /**
      * Use this method to send point on the map.
      *
-     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-     * @param latitude             Latitude of location
-     * @param longitude            Longitude of location
-     * @param disable_notification Sends the message silently
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude            Latitude of location
+     * @param longitude           Longitude of location
+     * @param reply_to_message_id If the message is a reply, ID of the original message
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendLocation(ChatId chat_id, float latitude, float longitude, boolean disable_notification) throws IOException {
-        return sendLocation(chat_id, latitude, longitude, disable_notification, 0);
+    public Message sendLocation(ChatId chat_id, float latitude, float longitude, long reply_to_message_id) throws IOException {
+        return sendLocation(chat_id, latitude, longitude, reply_to_message_id, null);
     }
 
     /**
@@ -649,59 +703,163 @@ public abstract class TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendLocation(ChatId chat_id, float latitude, float longitude) throws IOException {
-        return sendLocation(chat_id, latitude, longitude, false);
+        return sendLocation(chat_id, latitude, longitude, 0);
     }
 
     /**
-     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     * Use this method to send information about a venue.
      *
-     * @param inline_query_id Unique identifier for the answered query
-     * @param results         A JSON-serialized array of results for the inline query
-     * @param next_offset     Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
-     * @param is_personal     Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
-     * @param cache_time      The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
-     * @return On success, returns True.
+     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude             Latitude of location
+     * @param longitude            Longitude of location
+     * @param title                Name of the venue
+     * @param address              Address of the venue
+     * @param foursquare_id        Foursquare identifier of the venue
+     * @param reply_to_message_id  If the message is a reply, ID of the original message
+     * @param reply_markup         Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param disable_notification Sends the message silently
+     * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal, int cache_time) throws IOException;
+    public abstract Message sendVenue(ChatId chat_id, float latitude, float longitude, String title, String address, String foursquare_id, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException;
 
     /**
-     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     * Use this method to send information about a venue.
      *
-     * @param inline_query_id Unique identifier for the answered query
-     * @param results         A JSON-serialized array of results for the inline query
-     * @param next_offset     Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
-     * @param is_personal     Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
-     * @return On success, returns True.
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude            Latitude of location
+     * @param longitude           Longitude of location
+     * @param title               Name of the venue
+     * @param address             Address of the venue
+     * @param foursquare_id       Foursquare identifier of the venue
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal) throws IOException {
-        return answerInlineQuery(inline_query_id, results, next_offset, is_personal, -1);
+    public Message sendVenue(ChatId chat_id, float latitude, float longitude, String title, String address, String foursquare_id, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendVenue(chat_id, latitude, longitude, title, address, foursquare_id, reply_to_message_id, reply_markup, false);
     }
 
     /**
-     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     * Use this method to send information about a venue.
      *
-     * @param inline_query_id Unique identifier for the answered query
-     * @param results         A JSON-serialized array of results for the inline query
-     * @param next_offset     Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
-     * @return On success, returns True.
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude            Latitude of location
+     * @param longitude           Longitude of location
+     * @param title               Name of the venue
+     * @param address             Address of the venue
+     * @param foursquare_id       Foursquare identifier of the venue
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset) throws IOException {
-        return answerInlineQuery(inline_query_id, results, next_offset, false);
+    public Message sendVenue(ChatId chat_id, float latitude, float longitude, String title, String address, String foursquare_id, long reply_to_message_id) throws IOException {
+        return sendVenue(chat_id, latitude, longitude, title, address, foursquare_id, reply_to_message_id, null);
     }
 
     /**
-     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     * Use this method to send information about a venue.
      *
-     * @param inline_query_id Unique identifier for the answered query
-     * @param results         A JSON-serialized array of results for the inline query
-     * @return On success, returns True.
+     * @param chat_id       Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude      Latitude of location
+     * @param longitude     Longitude of location
+     * @param title         Name of the venue
+     * @param address       Address of the venue
+     * @param foursquare_id Foursquare identifier of the venue
+     * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results) throws IOException {
-        return answerInlineQuery(inline_query_id, results, null);
+    public Message sendVenue(ChatId chat_id, float latitude, float longitude, String title, String address, String foursquare_id) throws IOException {
+        return sendVenue(chat_id, latitude, longitude, title, address, foursquare_id, 0);
+    }
+
+    /**
+     * Use this method to send information about a venue.
+     *
+     * @param chat_id   Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param latitude  Latitude of location
+     * @param longitude Longitude of location
+     * @param title     Name of the venue
+     * @param address   Address of the venue
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public Message sendVenue(ChatId chat_id, float latitude, float longitude, String title, String address) throws IOException {
+        return sendVenue(chat_id, latitude, longitude, title, address, null);
+    }
+
+    /**
+     * Use this method to send phone contacts.
+     *
+     * @param chat_id              Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param phone_number         Contact's phone number
+     * @param first_name           Contact's first name
+     * @param last_name            Contact's last name
+     * @param reply_to_message_id  If the message is a reply, ID of the original message
+     * @param reply_markup         Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @param disable_notification Sends the message silently
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract Message sendContact(ChatId chat_id, String phone_number, String first_name, String last_name, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException;
+
+    /**
+     * Use this method to send phone contacts.
+     *
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param phone_number        Contact's phone number
+     * @param first_name          Contact's first name
+     * @param last_name           Contact's last name
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @param reply_markup        Additional interface options. An object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public Message sendContact(ChatId chat_id, String phone_number, String first_name, String last_name, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+        return sendContact(chat_id, phone_number, first_name, last_name, reply_to_message_id, reply_markup, false);
+    }
+
+    /**
+     * Use this method to send phone contacts.
+     *
+     * @param chat_id             Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param phone_number        Contact's phone number
+     * @param first_name          Contact's first name
+     * @param last_name           Contact's last name
+     * @param reply_to_message_id If the message is a reply, ID of the original message
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public Message sendContact(ChatId chat_id, String phone_number, String first_name, String last_name, long reply_to_message_id) throws IOException {
+        return sendContact(chat_id, phone_number, first_name, last_name, reply_to_message_id, null);
+    }
+
+    /**
+     * Use this method to send phone contacts.
+     *
+     * @param chat_id      Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param phone_number Contact's phone number
+     * @param first_name   Contact's first name
+     * @param last_name    Contact's last name
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public Message sendContact(ChatId chat_id, String phone_number, String first_name, String last_name) throws IOException {
+        return sendContact(chat_id, phone_number, first_name, last_name, 0);
+    }
+
+    /**
+     * Use this method to send phone contacts.
+     *
+     * @param chat_id      Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param phone_number Contact's phone number
+     * @param first_name   Contact's first name
+     * @return On success, the sent Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public Message sendContact(ChatId chat_id, String phone_number, String first_name) throws IOException {
+        return sendContact(chat_id, phone_number, first_name, null);
     }
 
     /**
@@ -746,6 +904,120 @@ public abstract class TelegramBot {
      */
     public UserProfilePhotos getUserProfilePhotos(long user_id) throws IOException {
         return getUserProfilePhotos(user_id, 0);
+    }
+
+    /**
+     * Use this method to get a InputFile object for downloading. For the moment, bots can download files of up to 20MB in size.
+     *
+     * @param file_id File identifier to get TFile object
+     * @return On success, a TFile object is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract TFile getFile(String file_id) throws IOException;
+
+    /**
+     * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
+     *
+     * @param file_id           File identifier to for the file to be downloaded
+     * @param downloadToFile    The local file where the content has to be downloaded
+     * @param waitForCompletion Waits until the download is complete
+     * @return On success, a File object is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract HTTPFileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException;
+
+    /**
+     * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
+     *
+     * @param file_id        File identifier to for the file to be downloaded
+     * @param downloadToFile The local file where the content has to be downloaded
+     * @return On success, a File object is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract File downloadFile(String file_id, File downloadToFile) throws IOException;
+
+    /**
+     * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
+     *
+     * @param file_id File identifier to for the file to be downloaded
+     * @return On success, a File object is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public File downloadFile(String file_id) throws IOException {
+        return downloadFile(file_id, null);
+    }
+
+    /**
+     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     *
+     * @param inline_query_id     Unique identifier for the answered query
+     * @param results             A JSON-serialized array of results for the inline query
+     * @param next_offset         Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
+     * @param is_personal         Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
+     * @param cache_time          The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
+     * @param switch_pm_text      If passed, clients will display a button with specified text that switches the user to a private chat with the bot and sends the bot a start message with the parameter switch_pm_parameter
+     * @param switch_pm_parameter Parameter for the start message sent to the bot when user presses the switch button
+     *                            Example: An inline bot that sends YouTube videos can ask the user to connect the bot to their YouTube account to adapt search results accordingly.
+     *                            To do this, it displays a ‘Connect your YouTube account’ button above the results, or even before showing any.
+     *                            The user presses the button, switches to a private chat with the bot and, in doing so, passes a start parameter that instructs the bot to return an oauth link.
+     *                            Once done, the bot can offer a switch_inline button so that the user can easily return to the chat where they wanted to use the bot's inline capabilities.
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal, int cache_time, String switch_pm_text, String switch_pm_parameter) throws IOException;
+
+    /**
+     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     *
+     * @param inline_query_id Unique identifier for the answered query
+     * @param results         A JSON-serialized array of results for the inline query
+     * @param next_offset     Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
+     * @param is_personal     Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
+     * @param cache_time      The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal, int cache_time) throws IOException {
+        return answerInlineQuery(inline_query_id, results, next_offset, is_personal, cache_time, null, null);
+    }
+
+    /**
+     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     *
+     * @param inline_query_id Unique identifier for the answered query
+     * @param results         A JSON-serialized array of results for the inline query
+     * @param next_offset     Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
+     * @param is_personal     Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal) throws IOException {
+        return answerInlineQuery(inline_query_id, results, next_offset, is_personal, -1);
+    }
+
+    /**
+     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     *
+     * @param inline_query_id Unique identifier for the answered query
+     * @param results         A JSON-serialized array of results for the inline query
+     * @param next_offset     Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don‘t support pagination. Offset length can’t exceed 64 bytes.
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset) throws IOException {
+        return answerInlineQuery(inline_query_id, results, next_offset, false);
+    }
+
+    /**
+     * Use this method to send answers to an inline query. No more than 50 results per query are allowed.
+     *
+     * @param inline_query_id Unique identifier for the answered query
+     * @param results         A JSON-serialized array of results for the inline query
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results) throws IOException {
+        return answerInlineQuery(inline_query_id, results, null);
     }
 
     /**
@@ -802,46 +1074,5 @@ public abstract class TelegramBot {
      */
     public Update[] getUpdatesImmediately() throws IOException {
         return getUpdates(0);
-    }
-
-    /**
-     * Use this method to get a TelegramFile object for downloading. For the moment, bots can download files of up to 20MB in size.
-     *
-     * @param file_id File identifier to get TelegramFile object
-     * @return On success, a TelegramFile object is returned.
-     * @throws IOException an exception is thrown in case of any service call failures
-     */
-    public abstract TelegramFile getFile(String file_id) throws IOException;
-
-    /**
-     * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
-     *
-     * @param file_id           File identifier to for the file to be downloaded
-     * @param downloadToFile    The local file where the content has to be downloaded
-     * @param waitForCompletion Waits until the download is complete
-     * @return On success, a File object is returned.
-     * @throws IOException an exception is thrown in case of any service call failures
-     */
-    public abstract HTTPFileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException;
-
-    /**
-     * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
-     *
-     * @param file_id        File identifier to for the file to be downloaded
-     * @param downloadToFile The local file where the content has to be downloaded
-     * @return On success, a File object is returned.
-     * @throws IOException an exception is thrown in case of any service call failures
-     */
-    public abstract File downloadFile(String file_id, File downloadToFile) throws IOException;
-
-    /**
-     * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.
-     *
-     * @param file_id File identifier to for the file to be downloaded
-     * @return On success, a File object is returned.
-     * @throws IOException an exception is thrown in case of any service call failures
-     */
-    public File downloadFile(String file_id) throws IOException {
-        return downloadFile(file_id, null);
     }
 }

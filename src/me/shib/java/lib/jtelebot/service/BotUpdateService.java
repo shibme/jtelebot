@@ -1,7 +1,7 @@
 package me.shib.java.lib.jtelebot.service;
 
 import me.shib.java.lib.common.utils.JsonLib;
-import me.shib.java.lib.jtelebot.types.Update;
+import me.shib.java.lib.jtelebot.models.updates.Update;
 import me.shib.java.lib.rest.client.Parameter;
 
 import java.io.IOException;

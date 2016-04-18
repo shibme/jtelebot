@@ -1,7 +1,10 @@
 package me.shib.java.lib.jtelebot.service;
 
 import me.shib.java.lib.common.utils.JsonLib;
-import me.shib.java.lib.jtelebot.types.*;
+import me.shib.java.lib.jtelebot.models.inline.InlineQueryResult;
+import me.shib.java.lib.jtelebot.models.types.*;
+import me.shib.java.lib.jtelebot.models.updates.Message;
+import me.shib.java.lib.jtelebot.models.updates.Update;
 import me.shib.java.lib.rest.client.HTTPFileDownloader;
 import me.shib.java.lib.rest.client.Parameter;
 
@@ -11,7 +14,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
- * Create an instance for this class with your Bot API token. Instances are singleton and for every new API token.
+ * Create an instance for this class with your Bot API token. Instances are singleton and for every new API token, a singleton object is created.
  */
 public final class BotService extends TelegramBot {
 
@@ -174,7 +177,7 @@ public final class BotService extends TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendPhoto(ChatId chat_id, TelegramFile photo, boolean disable_notification, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+    public Message sendPhoto(ChatId chat_id, InputFile photo, boolean disable_notification, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
         String methodName = "sendPhoto";
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("chat_id", chat_id.getChatId()));
@@ -216,7 +219,7 @@ public final class BotService extends TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendAudio(ChatId chat_id, TelegramFile audio, boolean disable_notification, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+    public Message sendAudio(ChatId chat_id, InputFile audio, boolean disable_notification, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
         String methodName = "sendAudio";
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("chat_id", chat_id.getChatId()));
@@ -261,7 +264,7 @@ public final class BotService extends TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendDocument(ChatId chat_id, TelegramFile document, boolean disable_notification, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+    public Message sendDocument(ChatId chat_id, InputFile document, boolean disable_notification, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
         String methodName = "sendDocument";
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("chat_id", chat_id.getChatId()));
@@ -297,7 +300,7 @@ public final class BotService extends TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendSticker(ChatId chat_id, TelegramFile sticker, boolean disable_notification, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+    public Message sendSticker(ChatId chat_id, InputFile sticker, boolean disable_notification, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
         String methodName = "sendSticker";
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("chat_id", chat_id.getChatId()));
@@ -335,7 +338,7 @@ public final class BotService extends TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVideo(ChatId chat_id, TelegramFile video, boolean disable_notification, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+    public Message sendVideo(ChatId chat_id, InputFile video, boolean disable_notification, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
         String methodName = "sendVideo";
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("chat_id", chat_id.getChatId()));
@@ -378,7 +381,7 @@ public final class BotService extends TelegramBot {
      * @return On success, the sent Message is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public Message sendVoice(ChatId chat_id, TelegramFile voice, boolean disable_notification, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
+    public Message sendVoice(ChatId chat_id, InputFile voice, boolean disable_notification, int duration, long reply_to_message_id, ReplyMarkup reply_markup) throws IOException {
         String methodName = "sendVoice";
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("chat_id", chat_id.getChatId()));
@@ -544,13 +547,13 @@ public final class BotService extends TelegramBot {
     }
 
     /**
-     * Use this method to get a TelegramFile object for downloading. For the moment, bots can download files of up to 20MB in size.
+     * Use this method to get a TFile object for downloading. For the moment, bots can download files of up to 20MB in size.
      *
-     * @param file_id File identifier to get TelegramFile object
-     * @return On success, a TelegramFile object is returned.
+     * @param file_id File identifier to get TFile object
+     * @return On success, a TFile object is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public TelegramFile getFile(String file_id) throws IOException {
+    public TFile getFile(String file_id) throws IOException {
         String methodName = "getFile";
         ArrayList<Parameter> params = new ArrayList<>();
         params.add(new Parameter("file_id", "" + file_id));
@@ -558,7 +561,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), TelegramFile.class);
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), TFile.class);
     }
 
     /**
@@ -571,7 +574,7 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public HTTPFileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException {
-        TelegramFile tFile = getFile(file_id);
+        TFile tFile = getFile(file_id);
         if ((tFile == null) || (tFile.getFile_path() == null) || (tFile.getFile_path().isEmpty())) {
             return null;
         }
