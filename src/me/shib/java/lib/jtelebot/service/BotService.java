@@ -1,6 +1,7 @@
 package me.shib.java.lib.jtelebot.service;
 
 import me.shib.java.lib.common.utils.JsonLib;
+import me.shib.java.lib.jtelebot.models.inline.InlineKeyboardMarkup;
 import me.shib.java.lib.jtelebot.models.inline.InlineQueryResult;
 import me.shib.java.lib.jtelebot.models.types.*;
 import me.shib.java.lib.jtelebot.models.updates.Message;
@@ -701,6 +702,244 @@ public final class BotService extends TelegramBot {
         }
         if (null != switch_pm_parameter) {
             params.add(new Parameter("switch_pm_parameter", switch_pm_parameter));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return false;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+    }
+
+    private boolean manageGroupMember(String methodName, ChatId chat_id, long user_id) throws IOException {
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        params.add(new Parameter("user_id", "" + user_id));
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return false;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+    }
+
+    /**
+     * Use this method to kick a user from a group or a supergroup.
+     * In the case of supergroups, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first.
+     * The bot must be an administrator in the group for this to work.
+     *
+     * @param chat_id Unique identifier for the target group or username of the target supergroup (in the format @supergroupusername)
+     * @param user_id Unique identifier of the target user
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean kickChatMember(ChatId chat_id, long user_id) throws IOException {
+        return manageGroupMember("kickChatMember", chat_id, user_id);
+    }
+
+    /**
+     * Use this method to unban a previously kicked user in a supergroup.
+     * The user will not return to the group automatically, but will be able to join via link, etc.
+     * The bot must be an administrator in the group for this to work.
+     *
+     * @param chat_id Unique identifier for the target group or username of the target supergroup (in the format @supergroupusername)
+     * @param user_id Unique identifier of the target user
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean unbanChatMember(ChatId chat_id, long user_id) throws IOException {
+        return manageGroupMember("unbanChatMember", chat_id, user_id);
+    }
+
+    /**
+     * Use this method to send answers to callback queries sent from inline keyboards.
+     * The answer will be displayed to the user as a notification at the top of the chat screen or as an alert.
+     *
+     * @param callback_query_id Unique identifier for the query to be answered
+     * @param text              Text of the notification. If not specified, nothing will be shown to the user
+     * @param show_alert        If true, an alert will be shown by the client instead of a notification at the top of the chat screen.
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean answerCallbackQuery(String callback_query_id, String text, boolean show_alert) throws IOException {
+        String methodName = "answerCallbackQuery";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("callback_query_id", callback_query_id));
+        if (null != text) {
+            params.add(new Parameter("text", text));
+        }
+        if (show_alert) {
+            params.add(new Parameter("show_alert", "" + true));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return false;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+    }
+
+    /**
+     * Use this method to edit text messages sent by the bot.
+     *
+     * @param chat_id                  Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param message_id               Unique identifier of the sent message
+     * @param text                     New text of the message
+     * @param parse_mode               Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in your bot's message.
+     * @param disable_web_page_preview Disables link previews for links in this message
+     * @param reply_markup             A JSON-serialized object for an inline keyboard.
+     * @return On success, if edited message is sent by the bot, the edited Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    @Override
+    public Message editMessageText(ChatId chat_id, long message_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, InlineKeyboardMarkup reply_markup) throws IOException {
+        String methodName = "editMessageText";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        params.add(new Parameter("message_id", "" + message_id));
+        params.add(new Parameter("text", text));
+        if (parse_mode != null) {
+            params.add(new Parameter("parse_mode", parse_mode.toString()));
+        }
+        if (disable_web_page_preview) {
+            params.add(new Parameter("disable_web_page_preview", "" + true));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
+
+    /**
+     * Use this method to edit text messages sent via the bot (for inline bots).
+     *
+     * @param inline_message_id        Identifier of the inline message
+     * @param text                     New text of the message
+     * @param parse_mode               Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs in your bot's message.
+     * @param disable_web_page_preview Disables link previews for links in this message
+     * @param reply_markup             A JSON-serialized object for an inline keyboard.
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    @Override
+    public boolean editMessageText(String inline_message_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, InlineKeyboardMarkup reply_markup) throws IOException {
+        String methodName = "editMessageText";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("inline_message_id", inline_message_id));
+        params.add(new Parameter("text", text));
+        if (parse_mode != null) {
+            params.add(new Parameter("parse_mode", parse_mode.toString()));
+        }
+        if (disable_web_page_preview) {
+            params.add(new Parameter("disable_web_page_preview", "" + true));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return false;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+    }
+
+    /**
+     * Use this method to edit captions of messages sent by the bot.
+     *
+     * @param chat_id      Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param message_id   Unique identifier of the sent message
+     * @param caption      New caption of the message
+     * @param reply_markup A JSON-serialized object for an inline keyboard.
+     * @return On success, if edited message is sent by the bot, the edited Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    @Override
+    public Message editMessageCaption(ChatId chat_id, long message_id, String caption, InlineKeyboardMarkup reply_markup) throws IOException {
+        String methodName = "editMessageCaption";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        params.add(new Parameter("message_id", "" + message_id));
+        if (null != caption) {
+            params.add(new Parameter("caption", caption));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
+
+    /**
+     * Use this method to edit captions of messages sent via the bot (for inline bots).
+     *
+     * @param inline_message_id Identifier of the inline message
+     * @param caption           New caption of the message
+     * @param reply_markup      A JSON-serialized object for an inline keyboard.
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    @Override
+    public boolean editMessageCaption(String inline_message_id, String caption, InlineKeyboardMarkup reply_markup) throws IOException {
+        String methodName = "editMessageCaption";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("inline_message_id", inline_message_id));
+        if (null != caption) {
+            params.add(new Parameter("caption", caption));
+        }
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return false;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+    }
+
+    /**
+     * Use this method to edit only the reply markup of messages sent by the bot.
+     *
+     * @param chat_id      Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param message_id   Unique identifier of the sent message
+     * @param reply_markup A JSON-serialized object for an inline keyboard.
+     * @return On success, if edited message is sent by the bot, the edited Message is returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    @Override
+    public Message editMessageReplyMarkup(ChatId chat_id, long message_id, InlineKeyboardMarkup reply_markup) throws IOException {
+        String methodName = "editMessageReplyMarkup";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        params.add(new Parameter("message_id", "" + message_id));
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return null;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+    }
+
+    /**
+     * Use this method to edit only the reply markup of messages sent via the bot (for inline bots).
+     *
+     * @param inline_message_id Identifier of the inline message
+     * @param reply_markup      A JSON-serialized object for an inline keyboard.
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    @Override
+    public boolean editMessageReplyMarkup(String inline_message_id, InlineKeyboardMarkup reply_markup) throws IOException {
+        String methodName = "editMessageReplyMarkup";
+        ArrayList<Parameter> params = new ArrayList<>();
+        params.add(new Parameter("inline_message_id", inline_message_id));
+        if (null != reply_markup) {
+            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
