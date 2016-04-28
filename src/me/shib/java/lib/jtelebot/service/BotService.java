@@ -6,12 +6,12 @@ import me.shib.java.lib.jtelebot.models.inline.InlineQueryResult;
 import me.shib.java.lib.jtelebot.models.types.*;
 import me.shib.java.lib.jtelebot.models.updates.Message;
 import me.shib.java.lib.jtelebot.models.updates.Update;
-import me.shib.java.lib.rest.client.HTTPFileDownloader;
-import me.shib.java.lib.rest.client.Parameter;
+import me.shib.java.lib.microrest.HTTPFileDownloader;
+import me.shib.java.lib.microrest.requests.GET;
+import me.shib.java.lib.microrest.requests.POST;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -45,7 +45,7 @@ public final class BotService extends TelegramBot {
         }
         this.botApiToken = botApiToken;
         this.jsonLib = new JsonLib();
-        this.botServiceWrapper = new BotServiceWrapper(this.endPoint + "/bot" + botApiToken, jsonLib);
+        this.botServiceWrapper = new BotServiceWrapper(this.endPoint + "/bot" + botApiToken);
         this.botUpdateService = BotUpdateService.getInstance(this.botApiToken, this.endPoint);
     }
 
@@ -100,8 +100,8 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public User getMe() throws IOException {
-        String methodName = "getMe";
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.get(methodName, null);
+        GET getRequest = new GET("getMe");
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(getRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -139,26 +139,25 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendMessage(ChatId chat_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException {
-        String methodName = "sendMessage";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
-        params.add(new Parameter("text", text));
+        POST postRequest = new POST("sendMessage");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
+        postRequest.addParameter("text", text);
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
         if (parse_mode != null) {
-            params.add(new Parameter("parse_mode", parse_mode.toString()));
+            postRequest.addParameter("parse_mode", parse_mode.toString());
         }
         if (disable_web_page_preview) {
-            params.add(new Parameter("disable_web_page_preview", "" + true));
+            postRequest.addParameter("disable_web_page_preview", "" + true);
         }
         if (reply_to_message_id > 0) {
-            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+            postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -176,15 +175,14 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message forwardMessage(ChatId chat_id, ChatId from_chat_id, long message_id, boolean disable_notification) throws IOException {
-        String methodName = "forwardMessage";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
-        params.add(new Parameter("from_chat_id", from_chat_id.getChatId()));
-        params.add(new Parameter("message_id", "" + message_id));
+        POST postRequest = new POST("forwardMessage");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
+        postRequest.addParameter("from_chat_id", from_chat_id.getChatId());
+        postRequest.addParameter("message_id", "" + message_id);
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -204,27 +202,26 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendPhoto(ChatId chat_id, InputFile photo, String caption, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException {
-        String methodName = "sendPhoto";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        POST postRequest = new POST("sendPhoto");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
         if (null != photo.getFile_id()) {
-            params.add(new Parameter("photo", photo.getFile_id()));
+            postRequest.addParameter("photo", photo.getFile_id());
         } else {
-            params.add(new Parameter("photo", photo.getFile()));
+            postRequest.addParameter("photo", photo.getFile());
         }
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
         if ((null != caption) && (!caption.isEmpty())) {
-            params.add(new Parameter("caption", caption));
+            postRequest.addParameter("caption", caption);
         }
         if (reply_to_message_id > 0) {
-            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+            postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -246,33 +243,32 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendAudio(ChatId chat_id, InputFile audio, int duration, String performer, String title, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException {
-        String methodName = "sendAudio";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        POST postRequest = new POST("sendAudio");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
         if (null != audio.getFile_id()) {
-            params.add(new Parameter("audio", audio.getFile_id()));
+            postRequest.addParameter("audio", audio.getFile_id());
         } else {
-            params.add(new Parameter("audio", audio.getFile()));
+            postRequest.addParameter("audio", audio.getFile());
         }
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
         if (duration > 0) {
-            params.add(new Parameter("duration", "" + duration));
+            postRequest.addParameter("duration", "" + duration);
         }
         if ((null != performer) && (!performer.isEmpty())) {
-            params.add(new Parameter("performer", performer));
+            postRequest.addParameter("performer", performer);
         }
         if ((null != title) && (!title.isEmpty())) {
-            params.add(new Parameter("title", title));
+            postRequest.addParameter("title", title);
         }
         if (reply_to_message_id > 0) {
-            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+            postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -292,27 +288,26 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendDocument(ChatId chat_id, InputFile document, String caption, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException {
-        String methodName = "sendDocument";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        POST postRequest = new POST("sendDocument");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
         if (null != document.getFile_id()) {
-            params.add(new Parameter("document", document.getFile_id()));
+            postRequest.addParameter("document", document.getFile_id());
         } else {
-            params.add(new Parameter("document", document.getFile()));
+            postRequest.addParameter("document", document.getFile());
         }
         if (null != caption) {
-            params.add(new Parameter("caption", caption));
+            postRequest.addParameter("caption", caption);
         }
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
         if (reply_to_message_id > 0) {
-            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+            postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -331,24 +326,23 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendSticker(ChatId chat_id, InputFile sticker, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException {
-        String methodName = "sendSticker";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        POST postRequest = new POST("sendSticker");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
         if (null != sticker.getFile_id()) {
-            params.add(new Parameter("sticker", sticker.getFile_id()));
+            postRequest.addParameter("sticker", sticker.getFile_id());
         } else {
-            params.add(new Parameter("sticker", sticker.getFile()));
+            postRequest.addParameter("sticker", sticker.getFile());
         }
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
         if (reply_to_message_id > 0) {
-            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+            postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -371,36 +365,35 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendVideo(ChatId chat_id, InputFile video, int duration, String caption, long reply_to_message_id, ReplyMarkup reply_markup, int width, int height, boolean disable_notification) throws IOException {
-        String methodName = "sendVideo";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        POST postRequest = new POST("sendVideo");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
         if (null != video.getFile_id()) {
-            params.add(new Parameter("video", video.getFile_id()));
+            postRequest.addParameter("video", video.getFile_id());
         } else {
-            params.add(new Parameter("video", video.getFile()));
+            postRequest.addParameter("video", video.getFile());
         }
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
         if (duration > 0) {
-            params.add(new Parameter("duration", "" + duration));
+            postRequest.addParameter("duration", "" + duration);
         }
         if ((null != caption) && (!caption.isEmpty())) {
-            params.add(new Parameter("performer", caption));
+            postRequest.addParameter("performer", caption);
         }
         if (reply_to_message_id > 0) {
-            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+            postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
         if (width > 0) {
-            params.add(new Parameter("width", "" + width));
+            postRequest.addParameter("width", "" + width);
         }
         if (height > 0) {
-            params.add(new Parameter("height", "" + height));
+            postRequest.addParameter("height", "" + height);
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -420,27 +413,26 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendVoice(ChatId chat_id, InputFile voice, int duration, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException {
-        String methodName = "sendVoice";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        POST postRequest = new POST("sendVoice");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
         if (null != voice.getFile_id()) {
-            params.add(new Parameter("voice", voice.getFile_id()));
+            postRequest.addParameter("voice", voice.getFile_id());
         } else {
-            params.add(new Parameter("voice", voice.getFile()));
+            postRequest.addParameter("voice", voice.getFile());
         }
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
         if (duration > 0) {
-            params.add(new Parameter("duration", "" + duration));
+            postRequest.addParameter("duration", "" + duration);
         }
         if (reply_to_message_id > 0) {
-            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+            postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -448,29 +440,29 @@ public final class BotService extends TelegramBot {
     }
 
     private Message sendLocationAndVenue(String methodName, ChatId chat_id, float latitude, float longitude, String title, String address, String foursquare_id, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException {
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
-        params.add(new Parameter("latitude", "" + latitude));
-        params.add(new Parameter("longitude", "" + longitude));
+        POST postRequest = new POST(methodName);
+        postRequest.addParameter("chat_id", chat_id.getChatId());
+        postRequest.addParameter("latitude", "" + latitude);
+        postRequest.addParameter("longitude", "" + longitude);
         if (null != title) {
-            params.add(new Parameter("title", title));
+            postRequest.addParameter("title", title);
         }
         if (null != address) {
-            params.add(new Parameter("address", address));
+            postRequest.addParameter("address", address);
         }
         if (null != foursquare_id) {
-            params.add(new Parameter("foursquare_id", foursquare_id));
+            postRequest.addParameter("foursquare_id", foursquare_id);
         }
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
         if (reply_to_message_id > 0) {
-            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+            postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -526,28 +518,27 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public Message sendContact(ChatId chat_id, String phone_number, String first_name, String last_name, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException {
-        String methodName = "sendContact";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
+        POST postRequest = new POST("sendContact");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
         if (null != phone_number) {
-            params.add(new Parameter("phone_number", phone_number));
+            postRequest.addParameter("phone_number", phone_number);
         }
         if (null != first_name) {
-            params.add(new Parameter("first_name", first_name));
+            postRequest.addParameter("first_name", first_name);
         }
         if (null != last_name) {
-            params.add(new Parameter("last_name", last_name));
+            postRequest.addParameter("last_name", last_name);
         }
         if (disable_notification) {
-            params.add(new Parameter("disable_notification", "" + true));
+            postRequest.addParameter("disable_notification", "" + true);
         }
         if (reply_to_message_id > 0) {
-            params.add(new Parameter("reply_to_message_id", "" + reply_to_message_id));
+            postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -563,11 +554,10 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public boolean sendChatAction(ChatId chat_id, ChatAction action) throws IOException {
-        String methodName = "sendChatAction";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
-        params.add(new Parameter("action", "" + action));
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        POST postRequest = new POST("sendChatAction");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
+        postRequest.addParameter("action", "" + action);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
@@ -584,16 +574,15 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public UserProfilePhotos getUserProfilePhotos(long user_id, int offset, int limit) throws IOException {
-        String methodName = "getUserProfilePhotos";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("user_id", "" + user_id));
+        POST postRequest = new POST("getUserProfilePhotos");
+        postRequest.addParameter("user_id", "" + user_id);
         if (offset > 0) {
-            params.add(new Parameter("offset", "" + offset));
+            postRequest.addParameter("offset", "" + offset);
         }
         if ((limit > 0) && (limit < 100)) {
-            params.add(new Parameter("limit", "" + limit));
+            postRequest.addParameter("limit", "" + limit);
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -608,10 +597,9 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public TFile getFile(String file_id) throws IOException {
-        String methodName = "getFile";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("file_id", "" + file_id));
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        POST postRequest = new POST("getFile");
+        postRequest.addParameter("file_id", "" + file_id);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -684,26 +672,25 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal, int cache_time, String switch_pm_text, String switch_pm_parameter) throws IOException {
-        String methodName = "answerInlineQuery";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("inline_query_id", inline_query_id));
-        params.add(new Parameter("results", "" + jsonLib.toJson(results)));
+        POST postRequest = new POST("answerInlineQuery");
+        postRequest.addParameter("inline_query_id", inline_query_id);
+        postRequest.addParameter("results", "" + jsonLib.toJson(results));
         if (next_offset != null) {
-            params.add(new Parameter("next_offset", next_offset));
+            postRequest.addParameter("next_offset", next_offset);
         }
         if (is_personal) {
-            params.add(new Parameter("is_personal", "" + true));
+            postRequest.addParameter("is_personal", "" + true);
         }
         if (cache_time >= 0) {
-            params.add(new Parameter("cache_time", "" + cache_time));
+            postRequest.addParameter("cache_time", "" + cache_time);
         }
         if (null != switch_pm_text) {
-            params.add(new Parameter("switch_pm_text", switch_pm_text));
+            postRequest.addParameter("switch_pm_text", switch_pm_text);
         }
         if (null != switch_pm_parameter) {
-            params.add(new Parameter("switch_pm_parameter", switch_pm_parameter));
+            postRequest.addParameter("switch_pm_parameter", switch_pm_parameter);
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
@@ -711,10 +698,10 @@ public final class BotService extends TelegramBot {
     }
 
     private boolean manageGroupMember(String methodName, ChatId chat_id, long user_id) throws IOException {
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
-        params.add(new Parameter("user_id", "" + user_id));
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        POST postRequest = new POST(methodName);
+        postRequest.addParameter("chat_id", chat_id.getChatId());
+        postRequest.addParameter("user_id", "" + user_id);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
@@ -760,16 +747,15 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public boolean answerCallbackQuery(String callback_query_id, String text, boolean show_alert) throws IOException {
-        String methodName = "answerCallbackQuery";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("callback_query_id", callback_query_id));
+        POST postRequest = new POST("answerCallbackQuery");
+        postRequest.addParameter("callback_query_id", callback_query_id);
         if (null != text) {
-            params.add(new Parameter("text", text));
+            postRequest.addParameter("text", text);
         }
         if (show_alert) {
-            params.add(new Parameter("show_alert", "" + true));
+            postRequest.addParameter("show_alert", "" + true);
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
@@ -790,21 +776,20 @@ public final class BotService extends TelegramBot {
      */
     @Override
     public Message editMessageText(ChatId chat_id, long message_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, InlineKeyboardMarkup reply_markup) throws IOException {
-        String methodName = "editMessageText";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
-        params.add(new Parameter("message_id", "" + message_id));
-        params.add(new Parameter("text", text));
+        POST postRequest = new POST("editMessageText");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
+        postRequest.addParameter("message_id", "" + message_id);
+        postRequest.addParameter("text", text);
         if (parse_mode != null) {
-            params.add(new Parameter("parse_mode", parse_mode.toString()));
+            postRequest.addParameter("parse_mode", parse_mode.toString());
         }
         if (disable_web_page_preview) {
-            params.add(new Parameter("disable_web_page_preview", "" + true));
+            postRequest.addParameter("disable_web_page_preview", "" + true);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -824,20 +809,19 @@ public final class BotService extends TelegramBot {
      */
     @Override
     public boolean editMessageText(String inline_message_id, String text, ParseMode parse_mode, boolean disable_web_page_preview, InlineKeyboardMarkup reply_markup) throws IOException {
-        String methodName = "editMessageText";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("inline_message_id", inline_message_id));
-        params.add(new Parameter("text", text));
+        POST postRequest = new POST("editMessageText");
+        postRequest.addParameter("inline_message_id", inline_message_id);
+        postRequest.addParameter("text", text);
         if (parse_mode != null) {
-            params.add(new Parameter("parse_mode", parse_mode.toString()));
+            postRequest.addParameter("parse_mode", parse_mode.toString());
         }
         if (disable_web_page_preview) {
-            params.add(new Parameter("disable_web_page_preview", "" + true));
+            postRequest.addParameter("disable_web_page_preview", "" + true);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
@@ -856,17 +840,16 @@ public final class BotService extends TelegramBot {
      */
     @Override
     public Message editMessageCaption(ChatId chat_id, long message_id, String caption, InlineKeyboardMarkup reply_markup) throws IOException {
-        String methodName = "editMessageCaption";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
-        params.add(new Parameter("message_id", "" + message_id));
+        POST postRequest = new POST("editMessageCaption");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
+        postRequest.addParameter("message_id", "" + message_id);
         if (null != caption) {
-            params.add(new Parameter("caption", caption));
+            postRequest.addParameter("caption", caption);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -884,16 +867,15 @@ public final class BotService extends TelegramBot {
      */
     @Override
     public boolean editMessageCaption(String inline_message_id, String caption, InlineKeyboardMarkup reply_markup) throws IOException {
-        String methodName = "editMessageCaption";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("inline_message_id", inline_message_id));
+        POST postRequest = new POST("editMessageCaption");
+        postRequest.addParameter("inline_message_id", inline_message_id);
         if (null != caption) {
-            params.add(new Parameter("caption", caption));
+            postRequest.addParameter("caption", caption);
         }
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
@@ -911,14 +893,13 @@ public final class BotService extends TelegramBot {
      */
     @Override
     public Message editMessageReplyMarkup(ChatId chat_id, long message_id, InlineKeyboardMarkup reply_markup) throws IOException {
-        String methodName = "editMessageReplyMarkup";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("chat_id", chat_id.getChatId()));
-        params.add(new Parameter("message_id", "" + message_id));
+        POST postRequest = new POST("editMessageReplyMarkup");
+        postRequest.addParameter("chat_id", chat_id.getChatId());
+        postRequest.addParameter("message_id", "" + message_id);
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
@@ -935,13 +916,12 @@ public final class BotService extends TelegramBot {
      */
     @Override
     public boolean editMessageReplyMarkup(String inline_message_id, InlineKeyboardMarkup reply_markup) throws IOException {
-        String methodName = "editMessageReplyMarkup";
-        ArrayList<Parameter> params = new ArrayList<>();
-        params.add(new Parameter("inline_message_id", inline_message_id));
+        POST postRequest = new POST("editMessageReplyMarkup");
+        postRequest.addParameter("inline_message_id", inline_message_id);
         if (null != reply_markup) {
-            params.add(new Parameter("reply_markup", jsonLib.toJson(reply_markup)));
+            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }

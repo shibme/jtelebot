@@ -1,40 +1,28 @@
 package me.shib.java.lib.jtelebot.service;
 
-import me.shib.java.lib.common.utils.JsonLib;
-import me.shib.java.lib.rest.client.Parameter;
-import me.shib.java.lib.rest.client.ServiceAdapter;
-import me.shib.java.lib.rest.client.ServiceResponse;
+import me.shib.java.lib.microrest.MicroRESTClient;
+import me.shib.java.lib.microrest.Response;
+import me.shib.java.lib.microrest.requests.Request;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-public final class BotServiceWrapper {
+final class BotServiceWrapper {
 
-    private ServiceAdapter serviceAdapter;
-    private JsonLib jsonLib;
+    private String endPoint;
 
-    public BotServiceWrapper(String endPoint, JsonLib jsonLib) {
-        serviceAdapter = new ServiceAdapter(endPoint);
-        this.jsonLib = jsonLib;
+    BotServiceWrapper(String endPoint) {
+        this.endPoint = endPoint;
     }
 
-    public BotServiceResponse post(String apiName, ArrayList<Parameter> params) throws IOException {
-        ServiceResponse serviceResponse = serviceAdapter.post(apiName, params);
-        if (serviceResponse.getStatusCode() != 200) {
+    BotServiceResponse call(Request request) throws IOException {
+        Response response = new MicroRESTClient(endPoint).call(request);
+        if (response.getStatusCode() != 200) {
             return null;
         }
-        return jsonLib.fromJson(serviceResponse.getResponse(), BotServiceResponse.class);
+        return response.getResponse(BotServiceResponse.class);
     }
 
-    public BotServiceResponse get(String apiName, ArrayList<Parameter> params) throws IOException {
-        ServiceResponse serviceResponse = serviceAdapter.get(apiName, params);
-        if (serviceResponse.getStatusCode() != 200) {
-            return null;
-        }
-        return jsonLib.fromJson(serviceResponse.getResponse(), BotServiceResponse.class);
-    }
-
-    public class BotServiceResponse {
+    class BotServiceResponse {
         private boolean ok;
         private Object result;
 
@@ -43,11 +31,11 @@ public final class BotServiceWrapper {
             this.result = null;
         }
 
-        public boolean isOk() {
+        boolean isOk() {
             return ok;
         }
 
-        public Object getResult() {
+        Object getResult() {
             return result;
         }
     }

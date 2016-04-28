@@ -5,7 +5,7 @@ import me.shib.java.lib.jtelebot.models.inline.InlineQueryResult;
 import me.shib.java.lib.jtelebot.models.types.*;
 import me.shib.java.lib.jtelebot.models.updates.Message;
 import me.shib.java.lib.jtelebot.models.updates.Update;
-import me.shib.java.lib.rest.client.HTTPFileDownloader;
+import me.shib.java.lib.microrest.HTTPFileDownloader;
 
 import java.io.File;
 import java.io.IOException;

@@ -2,14 +2,13 @@ package me.shib.java.lib.jtelebot.service;
 
 import me.shib.java.lib.common.utils.JsonLib;
 import me.shib.java.lib.jtelebot.models.updates.Update;
-import me.shib.java.lib.rest.client.Parameter;
+import me.shib.java.lib.microrest.requests.POST;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class BotUpdateService {
+final class BotUpdateService {
 
     private static Map<String, BotUpdateService> botUpdateServiceMap = new HashMap<>();
 
@@ -19,7 +18,7 @@ public final class BotUpdateService {
 
     private BotUpdateService(String botApiToken, String endPoint) {
         this.jsonLib = new JsonLib();
-        this.botServiceWrapper = new BotServiceWrapper(endPoint + "/bot" + botApiToken, jsonLib);
+        this.botServiceWrapper = new BotServiceWrapper(endPoint + "/bot" + botApiToken);
         this.updateServiceOffset = 0;
     }
 
@@ -30,7 +29,7 @@ public final class BotUpdateService {
      * @param endPoint    the endpoint to call the Bot API service. Might be used in case of proxy services.
      * @return A singleton instance of the bot's update receiver for a given API token. Returns null if null or empty values are provided.
      */
-    protected static synchronized BotUpdateService getInstance(String botApiToken, String endPoint) {
+    static synchronized BotUpdateService getInstance(String botApiToken, String endPoint) {
         if ((botApiToken == null) || (botApiToken.isEmpty())) {
             return null;
         }
@@ -51,19 +50,18 @@ public final class BotUpdateService {
      * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    protected synchronized Update[] getUpdates(int timeout, int limit, long offset) throws IOException {
-        String methodName = "getUpdates";
-        ArrayList<Parameter> params = new ArrayList<>();
+    synchronized Update[] getUpdates(int timeout, int limit, long offset) throws IOException {
+        POST postRequest = new POST("getUpdates");
         if (offset > 0) {
-            params.add(new Parameter("offset", "" + offset));
+            postRequest.addParameter("offset", "" + offset);
         }
         if ((limit > 0) && (limit <= 100)) {
-            params.add(new Parameter("limit", "" + limit));
+            postRequest.addParameter("limit", "" + limit);
         }
         if (timeout > 0) {
-            params.add(new Parameter("timeout", "" + timeout));
+            postRequest.addParameter("timeout", "" + timeout);
         }
-        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.post(methodName, params);
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return new Update[0];
         }
@@ -78,7 +76,7 @@ public final class BotUpdateService {
      * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    protected synchronized Update[] getUpdates(int timeout, int limit) throws IOException {
+    synchronized Update[] getUpdates(int timeout, int limit) throws IOException {
         Update[] updates = getUpdates(timeout, limit, updateServiceOffset);
         if (updates.length > 0) {
             updateServiceOffset = updates[updates.length - 1].getUpdate_id() + 1;
