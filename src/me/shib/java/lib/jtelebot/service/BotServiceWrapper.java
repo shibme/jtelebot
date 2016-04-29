@@ -1,6 +1,6 @@
 package me.shib.java.lib.jtelebot.service;
 
-import me.shib.java.lib.restiny.MicroRESTClient;
+import me.shib.java.lib.restiny.RESTinyClient;
 import me.shib.java.lib.restiny.Response;
 import me.shib.java.lib.restiny.requests.Request;
 
@@ -8,14 +8,14 @@ import java.io.IOException;
 
 final class BotServiceWrapper {
 
-    private MicroRESTClient microRESTClient;
+    private RESTinyClient resTinyClient;
 
     BotServiceWrapper(String endPoint) {
-        this.microRESTClient = new MicroRESTClient(endPoint);
+        this.resTinyClient = new RESTinyClient(endPoint);
     }
 
     BotServiceResponse call(Request request) throws IOException {
-        Response response = microRESTClient.call(request);
+        Response response = resTinyClient.call(request);
         if (response.getStatusCode() != 200) {
             return null;
         }
