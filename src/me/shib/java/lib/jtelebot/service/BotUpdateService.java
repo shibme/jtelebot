@@ -2,7 +2,7 @@ package me.shib.java.lib.jtelebot.service;
 
 import me.shib.java.lib.common.utils.JsonLib;
 import me.shib.java.lib.jtelebot.models.updates.Update;
-import me.shib.java.lib.microrest.requests.POST;
+import me.shib.java.lib.restiny.requests.POST;
 
 import java.io.IOException;
 import java.util.HashMap;

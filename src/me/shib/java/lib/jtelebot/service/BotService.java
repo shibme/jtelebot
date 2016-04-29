@@ -6,9 +6,9 @@ import me.shib.java.lib.jtelebot.models.inline.InlineQueryResult;
 import me.shib.java.lib.jtelebot.models.types.*;
 import me.shib.java.lib.jtelebot.models.updates.Message;
 import me.shib.java.lib.jtelebot.models.updates.Update;
-import me.shib.java.lib.microrest.HTTPFileDownloader;
-import me.shib.java.lib.microrest.requests.GET;
-import me.shib.java.lib.microrest.requests.POST;
+import me.shib.java.lib.restiny.HTTPFileDownloader;
+import me.shib.java.lib.restiny.requests.GET;
+import me.shib.java.lib.restiny.requests.POST;
 
 import java.io.File;
 import java.io.IOException;

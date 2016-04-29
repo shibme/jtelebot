@@ -152,7 +152,7 @@
         </dependency>
         <dependency>
             <groupId>me.shib.java.lib</groupId>
-            <artifactId>microrest</artifactId>
+            <artifactId>restiny</artifactId>
             <version>0.1.0</version>
         </dependency>
     </dependencies>
