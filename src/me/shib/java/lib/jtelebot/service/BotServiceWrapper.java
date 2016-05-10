@@ -24,15 +24,27 @@ final class BotServiceWrapper {
 
     class BotServiceResponse {
         private boolean ok;
+        private int error_code;
+        private String description;
         private Object result;
 
         private BotServiceResponse() {
             this.ok = false;
+            this.error_code = 0;
+            this.description = null;
             this.result = null;
         }
 
         boolean isOk() {
             return ok;
+        }
+
+        public int getError_code() {
+            return error_code;
+        }
+
+        public String getDescription() {
+            return description;
         }
 
         Object getResult() {

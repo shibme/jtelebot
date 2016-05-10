@@ -85,6 +85,37 @@ public final class BotService extends TelegramBot {
     }
 
     /**
+     * Use this method to specify a url and receive incoming updates via an outgoing webhook.
+     * Whenever there is an update for the bot, an HTTPS POST request to the specified url will be sent, containing a JSON-serialized Update.
+     * In case of an unsuccessful request, it will give up after a reasonable amount of attempts.
+     * You will not be able to receive updates using getUpdates for as long as an outgoing webhook is set up.
+     * To use a self-signed certificate, you need to upload your public key certificate using certificate parameter.
+     * Please upload the certificate as InputFile, sending a String will not work.
+     * Ports currently supported for Webhooks: 443, 80, 88, 8443.
+     *
+     * @param url         HTTPS url to send updates to. Use an empty string to remove webhook integration
+     * @param certificate Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
+     * @return An array of Update objects is returned. Returns an empty array if there aren't any updates.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public boolean setWebhook(String url, InputFile certificate) throws IOException {
+        POST postRequest = new POST("setWebhook");
+        if (url != null) {
+            postRequest.addParameter("url", url);
+        }
+        if (null != certificate.getFile_id()) {
+            postRequest.addParameter("certificate", certificate.getFile_id());
+        } else {
+            postRequest.addParameter("certificate", certificate.getFile());
+        }
+        BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
+        if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
+            return false;
+        }
+        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+    }
+
+    /**
      * Gives the API token of the bot that is associated with the object.
      *
      * @return the API token of the bot is returned.
