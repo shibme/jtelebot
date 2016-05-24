@@ -1106,6 +1106,15 @@ public abstract class TelegramBot {
     public abstract boolean kickChatMember(ChatId chat_id, long user_id) throws IOException;
 
     /**
+     * Use this method for your bot to leave a group, supergroup or channel.
+     *
+     * @param chat_id Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @return On success, returns True.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract boolean leaveChat(ChatId chat_id) throws IOException;
+
+    /**
      * Use this method to unban a previously kicked user in a supergroup.
      * The user will not return to the group automatically, but will be able to join via link, etc.
      * The bot must be an administrator in the group for this to work.
@@ -1116,6 +1125,45 @@ public abstract class TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public abstract boolean unbanChatMember(ChatId chat_id, long user_id) throws IOException;
+
+    /**
+     * Use this method to get up to date information about the chat
+     * (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.).
+     *
+     * @param chat_id Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @return On success, returns a Chat object.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract Chat getChat(ChatId chat_id) throws IOException;
+
+    /**
+     * Use this method to get a list of administrators in a chat.
+     *
+     * @param chat_id Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @return On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots.
+     * If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract ChatMember[] getChatAdministrators(ChatId chat_id) throws IOException;
+
+    /**
+     * Use this method to get the number of members in a chat.
+     *
+     * @param chat_id Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @return On success, returns the number of members in a chat as an integer
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract int getChatMembersCount(ChatId chat_id) throws IOException;
+
+    /**
+     * Use this method to get information about a member of a chat.
+     *
+     * @param chat_id Unique identifier for the target chat or username of the target supergroup or channel (in the format @channelusername)
+     * @param user_id Unique identifier of the target user
+     * @return On success, returns a ChatMember object
+     * @throws IOException an exception is thrown in case of any service call failures
+     */
+    public abstract ChatMember getChatMember(ChatId chat_id, long user_id) throws IOException;
 
     /**
      * Use this method to send answers to callback queries sent from inline keyboards.
