@@ -65,7 +65,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.0.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -145,11 +145,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>me.shib.java.lib</groupId>
-            <artifactId>jtelebot-models</artifactId>
-            <version>2.1</version>
-        </dependency>
         <dependency>
             <groupId>me.shib.java.lib</groupId>
             <artifactId>restiny</artifactId>

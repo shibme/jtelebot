@@ -1,6 +1,5 @@
 package me.shib.java.lib.jtelebot.service;
 
-import me.shib.java.lib.common.utils.JsonLib;
 import me.shib.java.lib.jtelebot.models.inline.InlineKeyboardMarkup;
 import me.shib.java.lib.jtelebot.models.inline.InlineQueryResult;
 import me.shib.java.lib.jtelebot.models.types.*;
@@ -9,6 +8,7 @@ import me.shib.java.lib.jtelebot.models.updates.Update;
 import me.shib.java.lib.restiny.HTTPFileDownloader;
 import me.shib.java.lib.restiny.requests.GET;
 import me.shib.java.lib.restiny.requests.POST;
+import me.shib.java.lib.restiny.util.JsonUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ public final class BotService extends TelegramBot {
     private static Logger logger = Logger.getLogger(BotService.class.getName());
 
     private String botApiToken;
-    private JsonLib jsonLib;
+    private JsonUtil jsonUtil;
     private BotServiceWrapper botServiceWrapper;
     private User identity;
     private String endPoint;
@@ -44,7 +44,7 @@ public final class BotService extends TelegramBot {
             this.endPoint = endPoint;
         }
         this.botApiToken = botApiToken;
-        this.jsonLib = new JsonLib();
+        this.jsonUtil = new JsonUtil();
         this.botServiceWrapper = new BotServiceWrapper(this.endPoint + "/bot" + botApiToken);
         this.botUpdateService = BotUpdateService.getInstance(this.botApiToken, this.endPoint);
     }
@@ -112,7 +112,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Boolean.class);
     }
 
     /**
@@ -136,7 +136,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), User.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), User.class);
     }
 
     /**
@@ -186,13 +186,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -217,7 +217,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -250,13 +250,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -297,13 +297,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -336,13 +336,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -371,13 +371,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -416,7 +416,7 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         if (width > 0) {
             postRequest.addParameter("width", "" + width);
@@ -428,7 +428,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -461,13 +461,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     private Message sendLocationAndVenue(String methodName, ChatId chat_id, float latitude, float longitude, String title, String address, String foursquare_id, long reply_to_message_id, ReplyMarkup reply_markup, boolean disable_notification) throws IOException {
@@ -491,13 +491,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -567,13 +567,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("reply_to_message_id", "" + reply_to_message_id);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -592,7 +592,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), boolean.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), boolean.class);
     }
 
     /**
@@ -617,7 +617,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), UserProfilePhotos.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), UserProfilePhotos.class);
     }
 
     /**
@@ -634,7 +634,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), TFile.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), TFile.class);
     }
 
     /**
@@ -705,7 +705,7 @@ public final class BotService extends TelegramBot {
     public boolean answerInlineQuery(String inline_query_id, InlineQueryResult[] results, String next_offset, boolean is_personal, int cache_time, String switch_pm_text, String switch_pm_parameter) throws IOException {
         POST postRequest = new POST("answerInlineQuery");
         postRequest.addParameter("inline_query_id", inline_query_id);
-        postRequest.addParameter("results", "" + jsonLib.toJson(results));
+        postRequest.addParameter("results", "" + jsonUtil.toJson(results));
         if (next_offset != null) {
             postRequest.addParameter("next_offset", next_offset);
         }
@@ -725,7 +725,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Boolean.class);
     }
 
     private boolean manageGroupMember(String methodName, ChatId chat_id, long user_id) throws IOException {
@@ -736,7 +736,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Boolean.class);
     }
 
     /**
@@ -767,7 +767,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Boolean.class);
     }
 
     /**
@@ -799,7 +799,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Chat.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Chat.class);
     }
 
     /**
@@ -817,7 +817,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), ChatMember[].class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), ChatMember[].class);
     }
 
     /**
@@ -834,7 +834,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return 0;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Integer.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Integer.class);
     }
 
     /**
@@ -853,7 +853,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), ChatMember.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), ChatMember.class);
     }
 
     /**
@@ -879,7 +879,7 @@ public final class BotService extends TelegramBot {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Boolean.class);
     }
 
     /**
@@ -907,13 +907,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("disable_web_page_preview", "" + true);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -939,13 +939,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("disable_web_page_preview", "" + true);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Boolean.class);
     }
 
     /**
@@ -967,13 +967,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("caption", caption);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -993,13 +993,13 @@ public final class BotService extends TelegramBot {
             postRequest.addParameter("caption", caption);
         }
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Boolean.class);
     }
 
     /**
@@ -1017,13 +1017,13 @@ public final class BotService extends TelegramBot {
         postRequest.addParameter("chat_id", chat_id.getChatId());
         postRequest.addParameter("message_id", "" + message_id);
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return null;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Message.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Message.class);
     }
 
     /**
@@ -1039,13 +1039,13 @@ public final class BotService extends TelegramBot {
         POST postRequest = new POST("editMessageReplyMarkup");
         postRequest.addParameter("inline_message_id", inline_message_id);
         if (null != reply_markup) {
-            postRequest.addParameter("reply_markup", jsonLib.toJson(reply_markup));
+            postRequest.addParameter("reply_markup", jsonUtil.toJson(reply_markup));
         }
         BotServiceWrapper.BotServiceResponse botServiceResponse = botServiceWrapper.call(postRequest);
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return false;
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Boolean.class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Boolean.class);
     }
 
 }

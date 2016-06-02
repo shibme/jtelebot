@@ -1,8 +1,8 @@
 package me.shib.java.lib.jtelebot.service;
 
-import me.shib.java.lib.common.utils.JsonLib;
 import me.shib.java.lib.jtelebot.models.updates.Update;
 import me.shib.java.lib.restiny.requests.POST;
+import me.shib.java.lib.restiny.util.JsonUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,11 +13,11 @@ final class BotUpdateService {
     private static Map<String, BotUpdateService> botUpdateServiceMap = new HashMap<>();
 
     private long updateServiceOffset;
-    private JsonLib jsonLib;
+    private JsonUtil jsonUtil;
     private BotServiceWrapper botServiceWrapper;
 
     private BotUpdateService(String botApiToken, String endPoint) {
-        this.jsonLib = new JsonLib();
+        this.jsonUtil = new JsonUtil();
         this.botServiceWrapper = new BotServiceWrapper(endPoint + "/bot" + botApiToken);
         this.updateServiceOffset = 0;
     }
@@ -65,7 +65,7 @@ final class BotUpdateService {
         if ((null == botServiceResponse) || (!botServiceResponse.isOk())) {
             return new Update[0];
         }
-        return jsonLib.fromJson(jsonLib.toJson(botServiceResponse.getResult()), Update[].class);
+        return jsonUtil.fromJson(jsonUtil.toJson(botServiceResponse.getResult()), Update[].class);
     }
 
     /**
