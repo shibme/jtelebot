@@ -7,14 +7,14 @@ import me.shib.java.lib.jtelebot.models.types.ReplyMarkup;
  */
 public final class InlineKeyboardMarkup implements ReplyMarkup {
 
-    private InlineKeyboardButton[] inline_keyboard;
+    private InlineKeyboardButton[][] inline_keyboard;
 
     /**
-     * Initializes a new InlineKeyboardMarkup object
+     * Initializes a new InlineKeyboardMarkup object with an Array of Array of InlineKeyboardButton
      *
      * @param inline_keyboard Array of button rows, each represented by an Array of InlineKeyboardButton objects
      */
-    public InlineKeyboardMarkup(InlineKeyboardButton[] inline_keyboard) {
+    public InlineKeyboardMarkup(InlineKeyboardButton[][] inline_keyboard) {
         this.inline_keyboard = inline_keyboard;
     }
 }
