@@ -9,40 +9,34 @@ public final class InlineKeyboardButton {
     private String url;
     private String callback_data;
     private String switch_inline_query;
+    private String switch_inline_query_current_chat;
+
+    public enum InlineKeyboardButtonType {
+        url, callback_data, switch_inline_query, switch_inline_query_current_chat
+    }
 
     /**
      * Initializes a new ReplyKeyboardMarkup object
      *
      * @param text Label text on the button
+     * @param buttonType The type of the Inline Keyboard Button based on what it has to do
+     * @param buttonValue the value corresponding to the button type
      */
-    public InlineKeyboardButton(String text) {
+    public InlineKeyboardButton(String text, InlineKeyboardButtonType buttonType, String buttonValue) {
         this.text = text;
-    }
-
-    /**
-     * Sets the HTTP url to be opened when button is pressed
-     *
-     * @param url HTTP url to be opened when button is pressed
-     */
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    /**
-     * Sets the Data to be sent in a callback query to the bot when button is pressed
-     *
-     * @param callback_data Data to be sent in a callback query to the bot when button is pressed
-     */
-    public void setCallback_data(String callback_data) {
-        this.callback_data = callback_data;
-    }
-
-    /**
-     * If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot‘s username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.
-     *
-     * @param switch_inline_query If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot‘s username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.
-     */
-    public void setSwitch_inline_query(String switch_inline_query) {
-        this.switch_inline_query = switch_inline_query;
+        switch (buttonType) {
+            case url:
+                this.url = buttonValue;
+                break;
+            case callback_data:
+                this.callback_data = buttonValue;
+                break;
+            case switch_inline_query:
+                this.switch_inline_query = buttonValue;
+                break;
+            case switch_inline_query_current_chat:
+                this.switch_inline_query_current_chat = buttonValue;
+                break;
+        }
     }
 }
