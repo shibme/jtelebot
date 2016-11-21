@@ -5,7 +5,7 @@ package me.shib.java.lib.jtelebot.models.types;
  */
 public final class ReplyKeyboardRemove implements ReplyMarkup {
 
-    private final boolean hide_keyboard = true;
+    private final boolean remove_keyboard = true;
     private boolean selective;
 
     /**
