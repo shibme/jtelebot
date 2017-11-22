@@ -5,7 +5,7 @@ import me.shib.java.lib.jtelebot.models.inline.InlineQueryResult;
 import me.shib.java.lib.jtelebot.models.types.*;
 import me.shib.java.lib.jtelebot.models.updates.Message;
 import me.shib.java.lib.jtelebot.models.updates.Update;
-import me.shib.java.lib.restiny.HTTPFileDownloader;
+import me.shib.java.lib.utils.FileDownloader;
 
 import java.io.File;
 import java.io.IOException;
@@ -997,7 +997,7 @@ public abstract class TelegramBot {
      * @return On success, a File object is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public abstract HTTPFileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException;
+    public abstract FileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException;
 
     /**
      * Use this method to download and return a File object of a given file_id . For the moment, bots can download files of up to 20MB in size.

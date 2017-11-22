@@ -5,7 +5,7 @@ import me.shib.java.lib.jtelebot.models.inline.InlineQueryResult;
 import me.shib.java.lib.jtelebot.models.types.*;
 import me.shib.java.lib.jtelebot.models.updates.Message;
 import me.shib.java.lib.jtelebot.models.updates.Update;
-import me.shib.java.lib.restiny.HTTPFileDownloader;
+import me.shib.java.lib.utils.FileDownloader;
 import me.shib.java.lib.restiny.requests.GET;
 import me.shib.java.lib.restiny.requests.POST;
 import me.shib.java.lib.restiny.util.JsonUtil;
@@ -646,17 +646,17 @@ public final class BotService extends TelegramBot {
      * @return On success, a File object is returned.
      * @throws IOException an exception is thrown in case of any service call failures
      */
-    public HTTPFileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException {
+    public FileDownloader.DownloadProgress downloadToFile(String file_id, File downloadToFile, boolean waitForCompletion) throws IOException {
         TFile tFile = getFile(file_id);
         if ((tFile == null) || (tFile.getFile_path() == null) || (tFile.getFile_path().isEmpty())) {
             return null;
         }
         String downloadableURL = endPoint + "/file/bot" + botApiToken + "/" + tFile.getFile_path();
-        HTTPFileDownloader hfd;
+        FileDownloader hfd;
         if (downloadToFile == null) {
-            hfd = new HTTPFileDownloader(downloadableURL, "TelegramBotDownloads");
+            hfd = new FileDownloader(downloadableURL, "TelegramBotDownloads");
         } else {
-            hfd = new HTTPFileDownloader(downloadableURL, downloadToFile);
+            hfd = new FileDownloader(downloadableURL, downloadToFile);
         }
         hfd.start();
         if (waitForCompletion) {
@@ -678,8 +678,8 @@ public final class BotService extends TelegramBot {
      * @throws IOException an exception is thrown in case of any service call failures
      */
     public File downloadFile(String file_id, File downloadToFile) throws IOException {
-        HTTPFileDownloader.DownloadProgress progress = downloadToFile(file_id, downloadToFile, true);
-        if ((progress != null) && (progress.getStatus() == HTTPFileDownloader.DownloadStatus.COMPLETED)) {
+        FileDownloader.DownloadProgress progress = downloadToFile(file_id, downloadToFile, true);
+        if ((progress != null) && (progress.getStatus() == FileDownloader.DownloadStatus.COMPLETED)) {
             return progress.getDownloadedFile();
         }
         return null;
