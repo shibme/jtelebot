@@ -23,7 +23,6 @@
 
     <developers>
         <developer>
-            <email>shibly.meeran@gmail.com</email>
             <name>Shibly Meeran</name>
             <url>https://github.com/shibme</url>
             <id>shibme</id>
@@ -78,7 +77,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
