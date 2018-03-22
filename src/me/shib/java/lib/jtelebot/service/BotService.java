@@ -8,7 +8,7 @@ import me.shib.java.lib.jtelebot.models.updates.Update;
 import me.shib.java.lib.utils.FileDownloader;
 import me.shib.java.lib.restiny.requests.GET;
 import me.shib.java.lib.restiny.requests.POST;
-import me.shib.java.lib.restiny.util.JsonUtil;
+import me.shib.java.lib.utils.JsonUtil;
 
 import java.io.File;
 import java.io.IOException;
